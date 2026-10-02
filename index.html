@@ -309,9 +309,60 @@ button:hover {
   padding: 16px;
 }
 
-.jobs-section h3 {
+.tab-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  border-bottom: 0.5px solid #333;
+  padding-bottom: 12px;
+}
+
+.tab-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  background: transparent;
+  color: #888;
+  transition: all 0.2s;
+}
+
+.tab-btn.active {
+  background: #1a1a1a;
+  color: #ffffff;
+  border-bottom: 2px solid #3b82f6;
+}
+
+.tab-btn:hover {
+  color: #ffffff;
+}
+
+.tab-content h3 {
   font-size: 16px;
   margin-bottom: 12px;
+}
+
+.search-box {
+  margin-bottom: 16px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 0.5px solid #333;
+  border-radius: 8px;
+  background: #0a0a0a;
+  color: #ffffff;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
 .job-list {
@@ -501,10 +552,29 @@ button:hover {
   </div>
 
   <div class="jobs-section">
-    <h3>ប្រវត្តិការងារ / Job History</h3>
-    <div class="job-list" id="jobList">
-      <div class="empty-state">
-        <p>មិនមានការងារនៅឡើយទេ / No jobs yet</p>
+    <div class="tab-buttons">
+      <button class="tab-btn active" id="tabCurrent" onclick="switchTab('current')">📝 Current</button>
+      <button class="tab-btn" id="tabHistory" onclick="switchTab('history')">📋 History</button>
+    </div>
+
+    <div id="currentTab" class="tab-content">
+      <h3>ការងារថ្មីៗ / Recent Jobs</h3>
+      <div class="job-list" id="jobList">
+        <div class="empty-state">
+          <p>មិនមានការងារនៅឡើយទេ / No jobs yet</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="historyTab" class="tab-content" style="display: none;">
+      <h3>ស្វែងរក / Search History</h3>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="ស្វែងរក / Search by description, date, amount...">
+      </div>
+      <div class="job-list" id="jobListSearch">
+        <div class="empty-state">
+          <p>មិនមានការងារនៅឡើយទេ / No jobs yet</p>
+        </div>
       </div>
     </div>
   </div>
@@ -526,6 +596,13 @@ function formatCurrency(num, type = 'usd') {
 function formatDate(dateStr) {
   const date = new Date(dateStr);
   return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function convertToUSD(amount, currency) {
+  if (currency === 'khr') {
+    return Math.round(amount / USD_TO_KHR * 100) / 100;
+  }
+  return amount;
 }
 
 function updateDashboard() {
@@ -589,19 +666,88 @@ function renderJobs() {
   }).join('');
 }
 
+function renderSearchJobs() {
+  const searchInput = document.getElementById('searchInput').value.toLowerCase();
+  const list = document.getElementById('jobListSearch');
+  
+  if (jobs.length === 0) {
+    list.innerHTML = '<div class="empty-state"><p>មិនមានការងារនៅឡើយទេ / No jobs yet</p></div>';
+    return;
+  }
+
+  let filtered = jobs;
+  if (searchInput) {
+    filtered = jobs.filter(job => 
+      job.description.toLowerCase().includes(searchInput) ||
+      formatDate(job.date).toLowerCase().includes(searchInput) ||
+      formatCurrency(job.income, 'usd').toLowerCase().includes(searchInput) ||
+      formatCurrency(job.cost, 'usd').toLowerCase().includes(searchInput)
+    );
+  }
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state"><p>រកមិនឃើញការងារ / No matching jobs found</p></div>';
+    return;
+  }
+
+  const sorted = [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
+  
+  list.innerHTML = sorted.map((job, idx) => {
+    const profit = job.income - job.cost;
+    const incomeDisplay = job.incomeAmount ? `${formatCurrency(job.incomeAmount, job.incomeCurrency)}` : formatCurrency(job.income, 'usd');
+    const costDisplay = job.costAmount ? `${formatCurrency(job.costAmount, job.costCurrency)}` : formatCurrency(job.cost, 'usd');
+    
+    return `
+      <div class="job-item">
+        <div class="job-header">
+          <div class="job-title">📱 ${job.description}</div>
+          <div class="job-date">${formatDate(job.date)}</div>
+        </div>
+        <div class="job-details">
+          <div class="job-detail">
+            <div class="job-detail-label">ទទួលបាន<br>Receive</div>
+            <div class="job-detail-value income">${incomeDisplay}</div>
+          </div>
+          <div class="job-detail">
+            <div class="job-detail-label">ដេីមទុន<br>Capital</div>
+            <div class="job-detail-value cost">${costDisplay}</div>
+          </div>
+          <div class="job-detail">
+            <div class="job-detail-label">ចំណេញ<br>Earnings</div>
+            <div class="job-detail-value profit">${profit >= 0 ? '+' : ''}${formatCurrency(profit, 'usd')}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function switchTab(tab) {
+  const currentTab = document.getElementById('currentTab');
+  const historyTab = document.getElementById('historyTab');
+  const btnCurrent = document.getElementById('tabCurrent');
+  const btnHistory = document.getElementById('tabHistory');
+
+  if (tab === 'current') {
+    currentTab.style.display = 'block';
+    historyTab.style.display = 'none';
+    btnCurrent.classList.add('active');
+    btnHistory.classList.remove('active');
+  } else {
+    currentTab.style.display = 'none';
+    historyTab.style.display = 'block';
+    btnCurrent.classList.remove('active');
+    btnHistory.classList.add('active');
+    renderSearchJobs();
+  }
+}
+
 document.getElementById('date').valueAsDate = new Date();
 
 document.getElementById('income').addEventListener('input', updatePreview);
 document.getElementById('cost').addEventListener('input', updatePreview);
 document.getElementById('incomeCurrency').addEventListener('change', updatePreview);
 document.getElementById('costCurrency').addEventListener('change', updatePreview);
-
-function convertToUSD(amount, currency) {
-  if (currency === 'khr') {
-    return Math.round(amount / USD_TO_KHR * 100) / 100;
-  }
-  return amount;
-}
 
 function updatePreview() {
   const incomeAmount = parseFloat(document.getElementById('income').value) || 0;
@@ -631,8 +777,8 @@ document.getElementById('addBtn').addEventListener('click', () => {
     return;
   }
 
-  if (!costAmount || costAmount < 0) {
-    alert('សូមបញ្ចូលដេីមទុន / Please enter capital amount');
+  if (costAmount < 0) {
+    alert('ដេីមទុនមិនអាចជាលេខលបបានទេ / Capital cannot be negative');
     return;
   }
 
@@ -662,6 +808,8 @@ document.getElementById('resetBtn').addEventListener('click', () => {
     renderJobs();
   }
 });
+
+document.getElementById('searchInput').addEventListener('input', renderSearchJobs);
 
 updateDashboard();
 renderJobs();
