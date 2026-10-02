@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Repair Profit">
+<title>📱 Repair Profit - Mobile Repair Tracker</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Khmer OS', sans-serif;
+  background: #0a0a0a;
+  color: #ffffff;
+}
+
+.app-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px 0;
+  background: #0a0a0a;
+  min-height: 100vh;
+}
+
+.app-header {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 0.5px solid #333;
+}
+
+.app-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.app-header p {
+  font-size: 13px;
+  color: #888;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  padding: 16px;
+  margin: 12px;
+}
+
+.stat-card {
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 14px;
+  border: 0.5px solid #333;
+  text-align: center;
+}
+
+.stat-card.income {
+  border-left: 3px solid #10b981;
+}
+
+.stat-card.cost {
+  border-left: 3px solid #ef4444;
+}
+
+.stat-card.profit {
+  border-left: 3px solid #3b82f6;
+  background: #1e3a8a;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.stat-card.income .stat-value {
+  color: #10b981;
+}
+
+.stat-card.cost .stat-value {
+  color: #ef4444;
+}
+
+.stat-card.profit .stat-value {
+  color: #3b82f6;
+}
+
+.summary-section {
+  background: #1a1a1a;
+  margin: 12px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 0.5px solid #333;
+}
+
+.summary-section h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.summary-card {
+  background: #0a0a0a;
+  padding: 12px;
+  border-radius: 8px;
+  border: 0.5px solid #333;
+}
+
+.summary-card h4 {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.summary-row-label {
+  color: #888;
+}
+
+.summary-row-value {
+  font-weight: 600;
+}
+
+.summary-row-value.income {
+  color: #10b981;
+}
+
+.summary-row-value.cost {
+  color: #ef4444;
+}
+
+.summary-row-value.profit {
+  color: #3b82f6;
+}
+
+.storage-info {
+  background: #064e3b;
+  border-left: 3px solid #10b981;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #10b981;
+  margin-bottom: 12px;
+}
+
+.form-section {
+  background: #1a1a1a;
+  margin: 12px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 0.5px solid #333;
+}
+
+.form-section h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-group.full {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #ffffff;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px 12px;
+  border: 0.5px solid #333;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #0a0a0a;
+  color: #ffffff;
+  font-family: inherit;
+}
+
+.form-group input {
+  width: 100%;
+}
+
+.form-group select {
+  background-color: #0a0a0a;
+  cursor: pointer;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.profit-display {
+  background: #0a0a0a;
+  border: 0.5px solid #333;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.profit-label {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.profit-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+button {
+  flex: 1;
+  padding: 10px 12px;
+  border: 0.5px solid #333;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  background: #0a0a0a;
+  color: #ffffff;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #1a1a1a;
+}
+
+.btn-add {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.btn-add:hover {
+  background: #2563eb;
+}
+
+.btn-reset {
+  background: #0a0a0a;
+  border-color: #333;
+}
+
+.btn-reset:hover {
+  background: #7f1d1d;
+  color: #fca5a5;
+  border-color: #ef4444;
+}
+
+.jobs-section {
+  margin: 12px;
+  padding: 16px;
+}
+
+.jobs-section h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.job-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.job-item {
+  background: #1a1a1a;
+  border-radius: 8px;
+  padding: 12px;
+  border: 0.5px solid #333;
+}
+
+.job-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.job-title {
+  font-size: 14px;
+  font-weight: 600;
+  flex: 1;
+}
+
+.job-date {
+  font-size: 11px;
+  color: #888;
+}
+
+.job-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.job-detail {
+  text-align: center;
+  padding: 8px;
+  background: #0a0a0a;
+  border-radius: 6px;
+}
+
+.job-detail-label {
+  color: #888;
+  font-size: 11px;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.job-detail-value {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.job-detail-value.income {
+  color: #10b981;
+}
+
+.job-detail-value.cost {
+  color: #ef4444;
+}
+
+.job-detail-value.profit {
+  color: #3b82f6;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #888;
+}
+
+.empty-state p {
+  font-size: 14px;
+}
+</style>
+</head>
+<body>
+<div class="app-container">
+  <div class="app-header">
+    <h1>📱 Repair Profit</h1>
+    <p>Mobile Repair Tracker / កម្មវិធីបង្កើតប្រាក់ចំណេញ</p>
+  </div>
+
+  <div class="dashboard">
+    <div class="stat-card income">
+      <div class="stat-label">ទទួលបាន<br>Income</div>
+      <div class="stat-value" id="totalIncome">0</div>
+    </div>
+    <div class="stat-card cost">
+      <div class="stat-label">ដេីមទុន<br>Capital</div>
+      <div class="stat-value" id="totalCost">0</div>
+    </div>
+    <div class="stat-card profit">
+      <div class="stat-label">ចំណេញ<br>Earnings</div>
+      <div class="stat-value" id="totalProfit">0</div>
+    </div>
+  </div>
+
+  <div class="summary-section">
+    <h3>📊 សង្ខេប / Summary</h3>
+    
+    <div class="storage-info">
+      ✅ ទិន្នន័យរក្សាទុកដោយស្វយ័ត / Data auto-saved (Won't disappear)
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-card">
+        <h4>💵 USD ($)</h4>
+        <div class="summary-row">
+          <span class="summary-row-label">ទទួលបាន</span>
+          <span class="summary-row-value income" id="sumIncomeUSD">$0</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-row-label">ដេីមទុន</span>
+          <span class="summary-row-value cost" id="sumCostUSD">$0</span>
+        </div>
+        <div class="summary-row" style="border-top: 0.5px solid #333; padding-top: 8px; margin-top: 8px;">
+          <span class="summary-row-label"><strong>ចំណេញ</strong></span>
+          <span class="summary-row-value profit" id="sumProfitUSD"><strong>$0</strong></span>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <h4>🇰🇭 KHR (៛)</h4>
+        <div class="summary-row">
+          <span class="summary-row-label">ទទួលបាន</span>
+          <span class="summary-row-value income" id="sumIncomeKHR">៛0</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-row-label">ដេីមទុន</span>
+          <span class="summary-row-value cost" id="sumCostKHR">៛0</span>
+        </div>
+        <div class="summary-row" style="border-top: 0.5px solid #333; padding-top: 8px; margin-top: 8px;">
+          <span class="summary-row-label"><strong>ចំណេញ</strong></span>
+          <span class="summary-row-value profit" id="sumProfitKHR"><strong>៛0</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>បន្ថែមការងារ / Add Repair Job</h3>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>ការពិពណ៌នា / Description</label>
+        <input type="text" id="jobDesc" placeholder="e.g., iPhone Screen Repair">
+      </div>
+      <div class="form-group">
+        <label>ទទួលបាន / Receive</label>
+        <div style="display: flex; gap: 8px;">
+          <input type="number" id="income" placeholder="10" min="0" step="0.01" style="flex: 1;">
+          <select id="incomeCurrency" style="width: 70px;">
+            <option value="usd">$ USD</option>
+            <option value="khr">៛ KHR</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>ដេីមទុន / Capital</label>
+        <div style="display: flex; gap: 8px;">
+          <input type="number" id="cost" placeholder="5" min="0" step="0.01" style="flex: 1;">
+          <select id="costCurrency" style="width: 70px;">
+            <option value="usd">$ USD</option>
+            <option value="khr">៛ KHR</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group full">
+        <label>ថ្ងៃខែឆ្នាំ / Date</label>
+        <input type="date" id="date">
+      </div>
+    </div>
+    <div class="profit-display">
+      <div class="profit-label">ចំណេញ / Earnings</div>
+      <div class="profit-value" id="previewProfit">$0</div>
+    </div>
+    <div class="form-buttons">
+      <button class="btn-add" id="addBtn">+ បន្ថែម / Add</button>
+      <button class="btn-reset" id="resetBtn">លុប / Clear</button>
+    </div>
+  </div>
+
+  <div class="jobs-section">
+    <h3>ប្រវត្តិការងារ / Job History</h3>
+    <div class="job-list" id="jobList">
+      <div class="empty-state">
+        <p>មិនមានការងារនៅឡើយទេ / No jobs yet</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let jobs = JSON.parse(localStorage.getItem('repairJobs') || '[]');
+const USD_TO_KHR = 4100;
+
+function formatCurrency(num, type = 'usd') {
+  const formatted = Math.round(num * 100) / 100;
+  if (type === 'khr') {
+    const khr = Math.round(formatted * USD_TO_KHR);
+    return khr.toLocaleString() + ' ៛';
+  }
+  return formatted.toLocaleString() + ' $';
+}
+
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function updateDashboard() {
+  const totalIncome = jobs.reduce((sum, job) => sum + job.income, 0);
+  const totalCost = jobs.reduce((sum, job) => sum + job.cost, 0);
+  const totalProfit = totalIncome - totalCost;
+
+  document.getElementById('totalIncome').textContent = formatCurrency(totalIncome, 'usd');
+  document.getElementById('totalCost').textContent = formatCurrency(totalCost, 'usd');
+  
+  const profitEl = document.getElementById('totalProfit');
+  profitEl.textContent = formatCurrency(totalProfit, 'usd');
+  profitEl.style.color = totalProfit >= 0 ? '#3b82f6' : '#ef4444';
+
+  document.getElementById('sumIncomeUSD').textContent = formatCurrency(totalIncome, 'usd');
+  document.getElementById('sumCostUSD').textContent = formatCurrency(totalCost, 'usd');
+  document.getElementById('sumProfitUSD').textContent = formatCurrency(totalProfit, 'usd');
+
+  document.getElementById('sumIncomeKHR').textContent = formatCurrency(totalIncome, 'khr');
+  document.getElementById('sumCostKHR').textContent = formatCurrency(totalCost, 'khr');
+  document.getElementById('sumProfitKHR').textContent = formatCurrency(totalProfit, 'khr');
+}
+
+function renderJobs() {
+  const list = document.getElementById('jobList');
+  
+  if (jobs.length === 0) {
+    list.innerHTML = '<div class="empty-state"><p>មិនមានការងារនៅឡើយទេ / No jobs yet</p></div>';
+    return;
+  }
+
+  const sorted = [...jobs].sort((a, b) => new Date(b.date) - new Date(a.date));
+  
+  list.innerHTML = sorted.map((job, idx) => {
+    const profit = job.income - job.cost;
+    const incomeDisplay = job.incomeAmount ? `${formatCurrency(job.incomeAmount, job.incomeCurrency)}` : formatCurrency(job.income, 'usd');
+    const costDisplay = job.costAmount ? `${formatCurrency(job.costAmount, job.costCurrency)}` : formatCurrency(job.cost, 'usd');
+    
+    return `
+      <div class="job-item">
+        <div class="job-header">
+          <div class="job-title">📱 ${job.description}</div>
+          <div class="job-date">${formatDate(job.date)}</div>
+        </div>
+        <div class="job-details">
+          <div class="job-detail">
+            <div class="job-detail-label">ទទួលបាន<br>Receive</div>
+            <div class="job-detail-value income">${incomeDisplay}</div>
+          </div>
+          <div class="job-detail">
+            <div class="job-detail-label">ដេីមទុន<br>Capital</div>
+            <div class="job-detail-value cost">${costDisplay}</div>
+          </div>
+          <div class="job-detail">
+            <div class="job-detail-label">ចំណេញ<br>Earnings</div>
+            <div class="job-detail-value profit">${profit >= 0 ? '+' : ''}${formatCurrency(profit, 'usd')}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+document.getElementById('date').valueAsDate = new Date();
+
+document.getElementById('income').addEventListener('input', updatePreview);
+document.getElementById('cost').addEventListener('input', updatePreview);
+document.getElementById('incomeCurrency').addEventListener('change', updatePreview);
+document.getElementById('costCurrency').addEventListener('change', updatePreview);
+
+function convertToUSD(amount, currency) {
+  if (currency === 'khr') {
+    return Math.round(amount / USD_TO_KHR * 100) / 100;
+  }
+  return amount;
+}
+
+function updatePreview() {
+  const incomeAmount = parseFloat(document.getElementById('income').value) || 0;
+  const costAmount = parseFloat(document.getElementById('cost').value) || 0;
+  const incomeCurrency = document.getElementById('incomeCurrency').value;
+  const costCurrency = document.getElementById('costCurrency').value;
+  
+  const incomeUSD = convertToUSD(incomeAmount, incomeCurrency);
+  const costUSD = convertToUSD(costAmount, costCurrency);
+  const profit = incomeUSD - costUSD;
+  
+  const profitEl = document.getElementById('previewProfit');
+  profitEl.textContent = formatCurrency(profit, 'usd');
+  profitEl.style.color = profit >= 0 ? '#10b981' : '#ef4444';
+}
+
+document.getElementById('addBtn').addEventListener('click', () => {
+  const description = document.getElementById('jobDesc').value || 'Repair Job';
+  const incomeAmount = parseFloat(document.getElementById('income').value);
+  const costAmount = parseFloat(document.getElementById('cost').value);
+  const incomeCurrency = document.getElementById('incomeCurrency').value;
+  const costCurrency = document.getElementById('costCurrency').value;
+  const date = document.getElementById('date').value;
+
+  if (!incomeAmount || incomeAmount <= 0) {
+    alert('សូមបញ្ចូលចំនួនលុយដែលទទួលបាន / Please enter income amount');
+    return;
+  }
+
+  if (!costAmount || costAmount < 0) {
+    alert('សូមបញ្ចូលដេីមទុន / Please enter capital amount');
+    return;
+  }
+
+  const income = convertToUSD(incomeAmount, incomeCurrency);
+  const cost = convertToUSD(costAmount, costCurrency);
+
+  jobs.push({ description, income, cost, date, incomeAmount, costAmount, incomeCurrency, costCurrency });
+  localStorage.setItem('repairJobs', JSON.stringify(jobs));
+  
+  document.getElementById('jobDesc').value = '';
+  document.getElementById('income').value = '';
+  document.getElementById('cost').value = '';
+  document.getElementById('incomeCurrency').value = 'usd';
+  document.getElementById('costCurrency').value = 'usd';
+  document.getElementById('date').valueAsDate = new Date();
+  updatePreview();
+  
+  updateDashboard();
+  renderJobs();
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if (confirm('លុបទិន្នន័យទាំងអស់ / Delete all jobs?')) {
+    jobs = [];
+    localStorage.removeItem('repairJobs');
+    updateDashboard();
+    renderJobs();
+  }
+});
+
+updateDashboard();
+renderJobs();
+updatePreview();
+</script>
+</body>
+</html>
