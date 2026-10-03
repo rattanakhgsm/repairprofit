@@ -609,8 +609,15 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore(app);
+let db = null;
+try {
+  console.log('Initializing Firebase...');
+  const app = firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore(app);
+  console.log('Firebase initialized successfully');
+} catch (err) {
+  console.error('Firebase init error:', err);
+}
 
 let jobs = JSON.parse(localStorage.getItem('repairJobs') || '[]');
 let isOnline = navigator.onLine;
@@ -803,32 +810,45 @@ function switchTab(tab) {
 
 // Firebase Sync Functions
 async function syncToFirebase() {
-  if (!isOnline || jobs.length === 0) return;
+  if (!db || !isOnline || jobs.length === 0) return;
   
   try {
     clearTimeout(syncTimeout);
     updateSyncStatus('Syncing...');
     
-    // Save to Firestore
+    // Create timeout promise
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Firebase sync timeout')), 5000)
+    );
+    
+    // Save to Firestore with timeout
     const docRef = db.collection('repair-profit').doc('jobs');
-    await docRef.set({
+    const savePromise = docRef.set({
       jobs: jobs,
       lastSync: new Date().toISOString()
     });
     
+    await Promise.race([savePromise, timeoutPromise]);
+    
     updateSyncStatus('✅ Synced with Firebase');
+    console.log('Firebase sync successful');
     
     // Sync every 30 seconds
     syncTimeout = setTimeout(syncToFirebase, 30000);
   } catch (err) {
     console.error('Sync error:', err);
-    updateSyncStatus('⚠️ Sync failed - retrying...');
+    if (err.message === 'Firebase sync timeout') {
+      updateSyncStatus('⚠️ Firebase busy - data saved locally');
+      console.warn('Firebase sync timed out, but data is saved in localStorage');
+    } else {
+      updateSyncStatus('⚠️ Offline - data saved locally');
+    }
     syncTimeout = setTimeout(syncToFirebase, 10000);
   }
 }
 
 async function loadFromFirebase() {
-  if (!isOnline) return;
+  if (!db || !isOnline) return;
   
   try {
     const doc = await db.collection('repair-profit').doc('jobs').get();
@@ -887,6 +907,11 @@ document.getElementById('addBtn').addEventListener('click', () => {
   const income = convertToUSD(incomeAmount, incomeCurrency);
   const cost = convertToUSD(costAmount, costCurrency);
 
+  // Disable button and show saving state
+  const btn = document.getElementById('addBtn');
+  btn.disabled = true;
+  btn.textContent = '💾 Saving...';
+  
   jobs.push({ description, income, cost, date, incomeAmount, costAmount, incomeCurrency, costCurrency });
   localStorage.setItem('repairJobs', JSON.stringify(jobs));
   
@@ -901,8 +926,13 @@ document.getElementById('addBtn').addEventListener('click', () => {
   updateDashboard();
   renderJobs();
   
-  // Background sync (non-blocking)
-  setTimeout(() => syncToFirebase(), 100);
+  // Update UI immediately, sync in background with timeout
+  setTimeout(() => {
+    syncToFirebase().finally(() => {
+      btn.disabled = false;
+      btn.textContent = '➕ Add Job';
+    });
+  }, 50);
 });
 
 document.getElementById('resetBtn').addEventListener('click', () => {
