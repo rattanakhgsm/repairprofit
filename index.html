@@ -900,7 +900,9 @@ document.getElementById('addBtn').addEventListener('click', () => {
   
   updateDashboard();
   renderJobs();
-  syncToFirebase();
+  
+  // Background sync (non-blocking)
+  setTimeout(() => syncToFirebase(), 100);
 });
 
 document.getElementById('resetBtn').addEventListener('click', () => {
