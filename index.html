@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Repair Profit">
-<title>📱 Repair Profit - Mobile Repair Tracker</title>
+<title>📱 Repair Profit v2.0</title>
 <style>
 * {
   margin: 0;
@@ -17,62 +17,146 @@
 html, body {
   width: 100%;
   height: 100%;
-}
-
-body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Khmer OS', sans-serif;
   background: #0a0a0a;
   color: #ffffff;
 }
 
-.app-container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px 0;
-  background: #0a0a0a;
-  min-height: 100vh;
+.app-wrapper {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
 }
 
-.app-header {
+/* SIDEBAR */
+.sidebar {
+  width: 260px;
+  background: #1a1a1a;
+  border-right: 0.5px solid #333;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding-bottom: 20px;
+  position: relative;
+}
+
+.sidebar-header {
   padding: 20px;
   text-align: center;
   border-bottom: 0.5px solid #333;
+  background: #0f0f0f;
+}
+
+.sidebar-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.sidebar-header .version {
+  font-size: 11px;
+  color: #888;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0;
+}
+
+.nav-item {
+  padding: 14px 16px;
+  margin: 0 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #888;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid transparent;
+}
+
+.nav-item:hover {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
+  border-color: #1e40af;
+}
+
+.nav-icon {
+  font-size: 18px;
+}
+
+.sidebar-footer {
+  padding: 12px;
+  border-top: 0.5px solid #333;
+  text-align: center;
+  font-size: 11px;
+  color: #666;
+}
+
+/* MAIN CONTENT */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: #0a0a0a;
+}
+
+.app-header {
+  padding: 16px 24px;
+  border-bottom: 0.5px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .app-header h1 {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.app-header p {
-  font-size: 13px;
-  color: #888;
 }
 
 .sync-status {
   font-size: 11px;
   color: #10b981;
-  margin-top: 4px;
+  padding: 4px 8px;
+  background: #064e3b;
+  border-radius: 4px;
   text-transform: uppercase;
 }
 
 .sync-status.offline {
   color: #ef4444;
+  background: #7f1d1d;
 }
 
+.sync-status.syncing {
+  color: #f59e0b;
+  background: #78350f;
+}
+
+/* DASHBOARD */
 .dashboard {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  padding: 16px;
-  margin: 12px;
+  padding: 16px 24px;
+  margin: 0;
 }
 
 .stat-card {
   background: #1a1a1a;
   border-radius: 12px;
-  padding: 14px;
+  padding: 16px;
   border: 0.5px solid #333;
   text-align: center;
 }
@@ -95,264 +179,173 @@ body {
   color: #888;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   line-height: 1.4;
 }
 
 .stat-value {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
 }
 
-.stat-card.income .stat-value {
-  color: #10b981;
-}
-
-.stat-card.cost .stat-value {
-  color: #ef4444;
-}
-
-.stat-card.profit .stat-value {
-  color: #3b82f6;
-}
-
-.summary-section {
-  background: #1a1a1a;
-  margin: 12px;
-  padding: 16px;
-  border-radius: 12px;
-  border: 0.5px solid #333;
-}
-
-.summary-section h3 {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 12px;
-}
-
-.summary-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.summary-card {
-  background: #0a0a0a;
-  padding: 12px;
-  border-radius: 8px;
-  border: 0.5px solid #333;
-}
-
-.summary-card h4 {
-  font-size: 12px;
-  color: #888;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-}
-
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 4px 0;
-  font-size: 13px;
-  margin-bottom: 4px;
-}
-
-.summary-row-label {
-  color: #888;
-}
-
-.summary-row-value {
-  font-weight: 600;
-}
-
-.summary-row-value.income {
-  color: #10b981;
-}
-
-.summary-row-value.cost {
-  color: #ef4444;
-}
-
-.summary-row-value.profit {
-  color: #3b82f6;
-}
-
-.storage-info {
-  background: #064e3b;
-  border-left: 3px solid #10b981;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  color: #10b981;
-  margin-bottom: 12px;
-}
-
+/* FORM SECTION */
 .form-section {
-  background: #1a1a1a;
-  margin: 12px;
-  padding: 16px;
-  border-radius: 12px;
-  border: 0.5px solid #333;
+  display: none;
+  padding: 24px;
 }
 
-.form-section h3 {
-  font-size: 16px;
-  margin-bottom: 12px;
+.form-section.active {
+  display: block;
 }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+.form-section h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #fff;
 }
 
 .form-group {
-  margin-bottom: 12px;
-}
-
-.form-group.full {
-  grid-column: 1 / -1;
+  margin-bottom: 16px;
 }
 
 .form-group label {
   display: block;
   font-size: 13px;
   font-weight: 500;
-  margin-bottom: 6px;
-  color: #ffffff;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
 }
 
 .form-group input,
-.form-group select {
-  padding: 10px 12px;
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: #1a1a1a;
   border: 0.5px solid #333;
   border-radius: 8px;
+  color: #fff;
   font-size: 14px;
-  background: #0a0a0a;
-  color: #ffffff;
   font-family: inherit;
 }
 
-.form-group input {
-  width: 100%;
-}
-
-.form-group select {
-  background-color: #0a0a0a;
-  cursor: pointer;
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
 }
 
 .form-group input:focus,
-.form-group select:focus {
+.form-group select:focus,
+.form-group textarea:focus {
   outline: none;
   border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  background: #252525;
 }
 
-.profit-display {
-  background: #0a0a0a;
+.input-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 12px;
+}
+
+.input-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.preview-box {
+  background: #1a1a1a;
   border: 0.5px solid #333;
   border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
   text-align: center;
 }
 
-.profit-label {
-  font-size: 12px;
+.preview-label {
+  font-size: 11px;
   color: #888;
-  margin-bottom: 4px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
 }
 
-.profit-value {
-  font-size: 20px;
-  font-weight: 600;
+.preview-value {
+  font-size: 28px;
+  font-weight: 700;
   color: #3b82f6;
 }
 
 .form-buttons {
-  display: flex;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
 
-button {
-  flex: 1;
-  padding: 10px 12px;
-  border: 0.5px solid #333;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  background: #0a0a0a;
-  color: #ffffff;
-  transition: background 0.2s;
-}
-
-button:hover {
-  background: #1a1a1a;
-}
-
-.btn-add {
-  background: #3b82f6;
-  color: white;
-  border-color: #3b82f6;
-}
-
-.btn-add:hover {
-  background: #2563eb;
-}
-
-.btn-reset {
-  background: #0a0a0a;
-  border-color: #333;
-}
-
-.btn-reset:hover {
-  background: #7f1d1d;
-  color: #fca5a5;
-  border-color: #ef4444;
-}
-
-.jobs-section {
-  margin: 12px;
-  padding: 16px;
-}
-
-.tab-buttons {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-  border-bottom: 0.5px solid #333;
-  padding-bottom: 12px;
-}
-
-.tab-btn {
-  padding: 10px 16px;
+.btn {
+  padding: 14px 18px;
   border: none;
   border-radius: 8px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  background: transparent;
-  color: #888;
   transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.tab-btn.active {
-  background: #1a1a1a;
-  color: #ffffff;
-  border-bottom: 2px solid #3b82f6;
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
 }
 
-.tab-btn:hover {
-  color: #ffffff;
+.btn-primary:active {
+  transform: scale(0.95);
 }
 
-.tab-content h3 {
-  font-size: 16px;
-  margin-bottom: 12px;
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: #2a2a2a;
+  color: #888;
+  border: 0.5px solid #444;
+}
+
+.btn-secondary:active {
+  background: #333;
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: #fff;
+}
+
+.btn-sm {
+  padding: 8px 12px;
+  font-size: 12px;
+  margin: 0 4px;
+}
+
+/* JOBS LIST */
+.jobs-section {
+  display: none;
+  padding: 24px;
+}
+
+.jobs-section.active {
+  display: block;
+}
+
+.jobs-section h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
 }
 
 .search-box {
@@ -361,243 +354,692 @@ button:hover {
 
 .search-box input {
   width: 100%;
-  padding: 10px 12px;
+  padding: 12px 14px;
+  background: #1a1a1a;
   border: 0.5px solid #333;
   border-radius: 8px;
-  background: #0a0a0a;
-  color: #ffffff;
+  color: #fff;
   font-size: 14px;
-  font-family: inherit;
-}
-
-.search-box input:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-}
-
-.job-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 }
 
 .job-item {
   background: #1a1a1a;
-  border-radius: 8px;
-  padding: 12px;
   border: 0.5px solid #333;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
 }
 
 .job-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 8px;
+  align-items: start;
+  margin-bottom: 12px;
 }
 
-.job-title {
-  font-size: 14px;
-  font-weight: 600;
+.job-customer {
   flex: 1;
 }
 
-.job-date {
+.job-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.job-phone {
+  font-size: 12px;
+  color: #3b82f6;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.job-phone:hover {
+  text-decoration: underline;
+}
+
+.job-status {
+  padding: 4px 10px;
+  border-radius: 6px;
   font-size: 11px;
-  color: #888;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.job-status.completed {
+  background: #10b981;
+  color: #fff;
+}
+
+.job-status.pending {
+  background: #f59e0b;
+  color: #000;
+}
+
+.job-status.on-hold {
+  background: #ef4444;
+  color: #fff;
+}
+
+.job-status.in-progress {
+  background: #3b82f6;
+  color: #fff;
 }
 
 .job-details {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
-  font-size: 12px;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 0.5px solid #333;
+  margin-bottom: 12px;
 }
 
-.job-detail {
-  text-align: center;
-  padding: 8px;
-  background: #0a0a0a;
-  border-radius: 6px;
+.job-info {
+  flex: 1;
 }
 
-.job-detail-label {
-  color: #888;
-  font-size: 11px;
-  margin-bottom: 4px;
-  line-height: 1.3;
-}
-
-.job-detail-value {
+.job-desc {
   font-size: 13px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.job-meta {
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+.job-notes {
+  font-size: 12px;
+  color: #aaa;
+  font-style: italic;
+  margin-top: 6px;
+  padding: 8px;
+  background: #252525;
+  border-radius: 4px;
+  border-left: 2px solid #3b82f6;
+}
+
+.job-amount {
+  text-align: right;
+}
+
+.job-income {
+  font-size: 14px;
   font-weight: 600;
-}
-
-.job-detail-value.income {
   color: #10b981;
+  margin-bottom: 4px;
 }
 
-.job-detail-value.cost {
+.job-cost {
+  font-size: 12px;
   color: #ef4444;
 }
 
-.job-detail-value.profit {
-  color: #3b82f6;
+.job-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding-top: 12px;
+  border-top: 0.5px solid #333;
 }
 
 .empty-state {
   text-align: center;
   padding: 40px 20px;
-  color: #888;
+  color: #666;
 }
 
 .empty-state p {
   font-size: 14px;
 }
+
+/* SUMMARY SECTION */
+.summary-section {
+  display: none;
+  padding: 24px;
+}
+
+.summary-section.active {
+  display: block;
+}
+
+.summary-section h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.summary-box {
+  background: #1a1a1a;
+  border: 0.5px solid #333;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.summary-title {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 0.5px solid #333;
+}
+
+.summary-row:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.summary-label {
+  font-size: 12px;
+  color: #888;
+}
+
+.summary-amount {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.summary-amount.income {
+  color: #10b981;
+}
+
+.summary-amount.cost {
+  color: #ef4444;
+}
+
+.summary-amount.profit {
+  color: #3b82f6;
+  font-size: 16px;
+}
+
+/* SETTINGS SECTION */
+.settings-section {
+  display: none;
+  padding: 24px;
+}
+
+.settings-section.active {
+  display: block;
+}
+
+.settings-section h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.settings-box {
+  background: #1a1a1a;
+  border: 0.5px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.settings-box h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+/* MODAL */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-content {
+  background: #1a1a1a;
+  border: 0.5px solid #333;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+  .sidebar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .app-wrapper {
+    flex-direction: column;
+  }
+
+  .main-content {
+    width: 100%;
+  }
+
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  .dashboard {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+
+  .form-section,
+  .jobs-section,
+  .summary-section,
+  .settings-section {
+    padding: 16px;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .job-details {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 769px) {
+  .menu-toggle {
+    display: none;
+  }
+}
 </style>
 </head>
 <body>
-<div class="app-container">
-  <div class="app-header">
-    <h1>📱 Repair Profit</h1>
-    <p>Mobile Repair Tracker / កម្មវិធីបង្កើតប្រាក់ចំណេញ</p>
-    <div class="sync-status" id="syncStatus">🔄 Syncing with Firebase...</div>
-  </div>
 
-  <div class="dashboard">
-    <div class="stat-card income">
-      <div class="stat-label">ទទួលបាន<br>Income</div>
-      <div class="stat-value" id="totalIncome">0</div>
-    </div>
-    <div class="stat-card cost">
-      <div class="stat-label">ដេីមទុន<br>Capital</div>
-      <div class="stat-value" id="totalCost">0</div>
-    </div>
-    <div class="stat-card profit">
-      <div class="stat-label">ចំណេញ<br>Earnings</div>
-      <div class="stat-value" id="totalProfit">0</div>
-    </div>
-  </div>
-
-  <div class="summary-section">
-    <h3>📊 សង្ខេប / Summary</h3>
-    
-    <div class="storage-info">
-      ✅ Auto-synced with Firebase / ទិន្នន័យរក្សាទុកដោយស្វយ័ត (Never disappear)
+<div class="app-wrapper">
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>📱 Repair Profit</h2>
+      <div class="version">v2.0</div>
     </div>
 
-    <div class="summary-grid">
-      <div class="summary-card">
-        <h4>💵 USD ($)</h4>
-        <div class="summary-row">
-          <span class="summary-row-label">ទទួលបាន</span>
-          <span class="summary-row-value income" id="sumIncomeUSD">$0</span>
-        </div>
-        <div class="summary-row">
-          <span class="summary-row-label">ដេីមទុន</span>
-          <span class="summary-row-value cost" id="sumCostUSD">$0</span>
-        </div>
-        <div class="summary-row" style="border-top: 0.5px solid #333; padding-top: 8px; margin-top: 8px;">
-          <span class="summary-row-label"><strong>ចំណេញ</strong></span>
-          <span class="summary-row-value profit" id="sumProfitUSD"><strong>$0</strong></span>
-        </div>
+    <div class="sidebar-nav">
+      <div class="nav-item active" data-tab="dashboard">
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
       </div>
-
-      <div class="summary-card">
-        <h4>🇰🇭 KHR (៛)</h4>
-        <div class="summary-row">
-          <span class="summary-row-label">ទទួលបាន</span>
-          <span class="summary-row-value income" id="sumIncomeKHR">៛0</span>
-        </div>
-        <div class="summary-row">
-          <span class="summary-row-label">ដេីមទុន</span>
-          <span class="summary-row-value cost" id="sumCostKHR">៛0</span>
-        </div>
-        <div class="summary-row" style="border-top: 0.5px solid #333; padding-top: 8px; margin-top: 8px;">
-          <span class="summary-row-label"><strong>ចំណេញ</strong></span>
-          <span class="summary-row-value profit" id="sumProfitKHR"><strong>៛0</strong></span>
-        </div>
+      <div class="nav-item" data-tab="form">
+        <span class="nav-icon">➕</span>
+        <span>Add Job</span>
       </div>
+      <div class="nav-item" data-tab="jobs">
+        <span class="nav-icon">📋</span>
+        <span>Jobs</span>
+      </div>
+      <div class="nav-item" data-tab="summary">
+        <span class="nav-icon">💹</span>
+        <span>Summary</span>
+      </div>
+      <div class="nav-item" data-tab="settings">
+        <span class="nav-icon">⚙️</span>
+        <span>Settings</span>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      © 2024 Repair Profit<br>
+      <span id="syncStatusMini" class="sync-status" style="display: block; margin-top: 8px;">●</span>
     </div>
   </div>
 
-  <div class="form-section">
-    <h3>បន្ថែមការងារ / Add Repair Job</h3>
-    <div class="form-grid">
-      <div class="form-group full">
-        <label>ការពិពណ៌នា / Description</label>
-        <input type="text" id="jobDesc" placeholder="e.g., iPhone Screen Repair">
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+    <!-- HEADER -->
+    <div class="app-header">
+      <h1 id="sectionTitle">Dashboard</h1>
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <div id="syncStatus" class="sync-status">✅ Ready</div>
+    </div>
+
+    <!-- DASHBOARD VIEW -->
+    <div class="form-section active" id="dashboard">
+      <div class="dashboard">
+        <div class="stat-card income">
+          <div class="stat-label">ទទួលបាន / Income</div>
+          <div class="stat-value" id="totalIncome">$0.00</div>
+        </div>
+        <div class="stat-card cost">
+          <div class="stat-label">ដេីមទុន / Capital</div>
+          <div class="stat-value" id="totalCost">$0.00</div>
+        </div>
+        <div class="stat-card profit">
+          <div class="stat-label">ចំណេញ / Earnings</div>
+          <div class="stat-value" id="totalProfit">$0.00</div>
+        </div>
       </div>
+
+      <div style="padding: 24px;">
+        <h2 style="font-size: 16px; margin-bottom: 16px;">📊 Summary by Currency</h2>
+        
+        <div class="summary-grid">
+          <div class="summary-box">
+            <div class="summary-title">USD $</div>
+            <div class="summary-row">
+              <span class="summary-label">Income</span>
+              <span class="summary-amount income" id="sumIncomeUSD">$0.00</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Capital</span>
+              <span class="summary-amount cost" id="sumCostUSD">$0.00</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Profit</span>
+              <span class="summary-amount profit" id="sumProfitUSD">$0.00</span>
+            </div>
+          </div>
+
+          <div class="summary-box">
+            <div class="summary-title">KHR ៛</div>
+            <div class="summary-row">
+              <span class="summary-label">Income</span>
+              <span class="summary-amount income" id="sumIncomeKHR">៛0</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Capital</span>
+              <span class="summary-amount cost" id="sumCostKHR">៛0</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Profit</span>
+              <span class="summary-amount profit" id="sumProfitKHR">៛0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD JOB FORM -->
+    <div class="form-section" id="form">
+      <h2 id="formTitle">➕ Add New Job</h2>
+      
       <div class="form-group">
-        <label>ទទួលបាន / Receive</label>
-        <div style="display: flex; gap: 8px;">
-          <input type="number" id="income" placeholder="10" min="0" step="0.01" style="flex: 1;">
-          <select id="incomeCurrency" style="width: 70px;">
-            <option value="usd">$ USD</option>
-            <option value="khr">៛ KHR</option>
+        <label>Customer Name / ឈ្មោះលូកក្រុម (Optional)</label>
+        <input type="text" id="customerName" placeholder="e.g., Sokha">
+      </div>
+
+      <div class="form-group">
+        <label>Phone / ទូរស័ព្ទ (Optional)</label>
+        <input type="tel" id="customerPhone" placeholder="e.g., +855 12 345 678">
+      </div>
+
+      <div class="form-group">
+        <label>Description / ពិពណ៌នា</label>
+        <input type="text" id="jobDesc" placeholder="e.g., iPhone 13 Screen Repair">
+      </div>
+
+      <div class="form-group">
+        <label>Income Amount / ចំនួនលុយដែលទទួលបាន</label>
+        <div class="input-row">
+          <input type="number" id="income" placeholder="Enter amount" step="0.01">
+          <select id="incomeCurrency">
+            <option value="usd">USD $</option>
+            <option value="khr">KHR ៛</option>
           </select>
         </div>
       </div>
+
       <div class="form-group">
-        <label>ដេីមទុន / Capital</label>
-        <div style="display: flex; gap: 8px;">
-          <input type="number" id="cost" placeholder="5" min="0" step="0.01" style="flex: 1;">
-          <select id="costCurrency" style="width: 70px;">
-            <option value="usd">$ USD</option>
-            <option value="khr">៛ KHR</option>
+        <label>Capital / ដេីមទុន (Parts Cost)</label>
+        <div class="input-row">
+          <input type="number" id="cost" placeholder="0" value="0" step="0.01">
+          <select id="costCurrency">
+            <option value="usd">USD $</option>
+            <option value="khr">KHR ៛</option>
           </select>
         </div>
       </div>
-      <div class="form-group full">
-        <label>ថ្ងៃខែឆ្នាំ / Date</label>
+
+      <div class="form-group">
+        <label>Status / សភាវะ</label>
+        <select id="jobStatus">
+          <option value="completed">✅ Completed</option>
+          <option value="pending">⏳ Pending</option>
+          <option value="on-hold">🛑 On Hold</option>
+          <option value="in-progress">🔧 In Progress</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Date / ថ្ងៃ</label>
         <input type="date" id="date">
       </div>
-    </div>
-    <div class="profit-display">
-      <div class="profit-label">ចំណេញ / Earnings</div>
-      <div class="profit-value" id="previewProfit">$0</div>
-    </div>
-    <div class="form-buttons">
-      <button class="btn-add" id="addBtn">+ បន្ថែម / Add</button>
-      <button class="btn-reset" id="resetBtn">លុប / Clear</button>
-    </div>
-  </div>
 
-  <div class="jobs-section">
-    <div class="tab-buttons">
-      <button class="tab-btn active" id="tabCurrent" onclick="switchTab('current')">📝 Current</button>
-      <button class="tab-btn" id="tabHistory" onclick="switchTab('history')">📋 History</button>
-    </div>
+      <div class="form-group">
+        <label>Notes / ចំណាត់ការ (Optional)</label>
+        <textarea id="jobNotes" placeholder="Additional details..."></textarea>
+      </div>
 
-    <div id="currentTab" class="tab-content">
-      <h3>ការងារថ្មីៗ / Recent Jobs</h3>
-      <div class="job-list" id="jobList">
-        <div class="empty-state">
-          <p>មិនមានការងារនៅឡើយទេ / No jobs yet</p>
-        </div>
+      <div class="preview-box">
+        <div class="preview-label">Estimated Profit / ចំណេញដែលបង្កើត</div>
+        <div class="preview-value" id="previewProfit">$0.00</div>
+      </div>
+
+      <div class="form-buttons">
+        <button class="btn btn-primary" id="addBtn">➕ Add Job</button>
+        <button class="btn btn-secondary" id="resetFormBtn">🔄 Clear</button>
       </div>
     </div>
 
-    <div id="historyTab" class="tab-content" style="display: none;">
-      <h3>ស្វែងរក / Search History</h3>
+    <!-- JOBS LIST -->
+    <div class="jobs-section" id="jobs">
+      <h2>📋 Jobs</h2>
+      
       <div class="search-box">
-        <input type="text" id="searchInput" placeholder="ស្វែងរក / Search by description, date, amount...">
+        <input type="text" id="searchBox" placeholder="🔍 Search by name, phone, description...">
       </div>
-      <div class="job-list" id="jobListSearch">
-        <div class="empty-state">
-          <p>មិនមានការងារនៅឡើយទេ / No jobs yet</p>
+
+      <div id="jobList"></div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="summary-section" id="summary">
+      <h2>💹 Financial Summary</h2>
+      
+      <div class="summary-grid">
+        <div class="summary-box">
+          <div class="summary-title">USD $</div>
+          <div class="summary-row">
+            <span class="summary-label">Total Income</span>
+            <span class="summary-amount income" id="summaryIncomeUSD">$0.00</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Total Capital</span>
+            <span class="summary-amount cost" id="summaryCostUSD">$0.00</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Total Profit</span>
+            <span class="summary-amount profit" id="summaryProfitUSD">$0.00</span>
+          </div>
         </div>
+
+        <div class="summary-box">
+          <div class="summary-title">KHR ៛</div>
+          <div class="summary-row">
+            <span class="summary-label">Total Income</span>
+            <span class="summary-amount income" id="summaryIncomeKHR">៛0</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Total Capital</span>
+            <span class="summary-amount cost" id="summaryCostKHR">៛0</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Total Profit</span>
+            <span class="summary-amount profit" id="summaryProfitKHR">៛0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="settings-section" id="settings">
+      <h2>⚙️ Settings</h2>
+      
+      <div class="settings-box">
+        <h3>💱 Exchange Rate</h3>
+        <div class="form-group">
+          <label>1 USD = ? KHR</label>
+          <input type="number" id="exchangeRate" placeholder="4100" step="1" min="1">
+        </div>
+        <button class="btn btn-primary" id="saveExchangeBtn" style="width: 100%;">💾 Save Exchange Rate</button>
+      </div>
+
+      <div class="settings-box">
+        <h3>🗑️ Danger Zone</h3>
+        <button class="btn btn-danger" id="clearAllBtn" style="width: 100%;">Delete All Jobs</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Firebase SDK -->
+<!-- EDIT JOB MODAL -->
+<div class="modal" id="editModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>✏️ Edit Job</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="form-group">
+      <label>Customer Name</label>
+      <input type="text" id="editCustomerName" placeholder="Customer name">
+    </div>
+
+    <div class="form-group">
+      <label>Phone</label>
+      <input type="tel" id="editCustomerPhone" placeholder="Phone number">
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <input type="text" id="editJobDesc" placeholder="Description">
+    </div>
+
+    <div class="form-group">
+      <label>Income Amount</label>
+      <div class="input-row">
+        <input type="number" id="editIncome" placeholder="Amount" step="0.01">
+        <select id="editIncomeCurrency">
+          <option value="usd">USD $</option>
+          <option value="khr">KHR ៛</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Capital</label>
+      <div class="input-row">
+        <input type="number" id="editCost" placeholder="0" step="0.01">
+        <select id="editCostCurrency">
+          <option value="usd">USD $</option>
+          <option value="khr">KHR ៛</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Status</label>
+      <select id="editJobStatus">
+        <option value="completed">✅ Completed</option>
+        <option value="pending">⏳ Pending</option>
+        <option value="on-hold">🛑 On Hold</option>
+        <option value="in-progress">🔧 In Progress</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Date</label>
+      <input type="date" id="editDate">
+    </div>
+
+    <div class="form-group">
+      <label>Notes</label>
+      <textarea id="editJobNotes" placeholder="Notes..."></textarea>
+    </div>
+
+    <div class="form-buttons">
+      <button class="btn btn-primary" id="saveEditBtn">💾 Save Changes</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js"></script>
 
 <script>
-// Firebase Config
+const APP_VERSION = '2.0';
+
 const firebaseConfig = {
   apiKey: "AIzaSyAjo9tpTz3yIM9_hbKdOBL0sEaxK7vucEM",
   authDomain: "repair-profit.firebaseapp.com",
@@ -608,55 +1050,81 @@ const firebaseConfig = {
   measurementId: "G-T93MWYTDFD"
 };
 
-// Initialize Firebase
 let db = null;
 try {
-  console.log('Initializing Firebase...');
   const app = firebase.initializeApp(firebaseConfig);
   db = firebase.firestore(app);
-  console.log('Firebase initialized successfully');
 } catch (err) {
   console.error('Firebase init error:', err);
 }
 
 let jobs = JSON.parse(localStorage.getItem('repairJobs') || '[]');
+let USD_TO_KHR = parseInt(localStorage.getItem('exchangeRate') || '4100');
 let isOnline = navigator.onLine;
-const USD_TO_KHR = 4100;
 let syncTimeout;
+let editingIndex = -1;
 
-// Check online/offline status
+document.getElementById('date').valueAsDate = new Date();
+document.getElementById('exchangeRate').value = USD_TO_KHR;
+
+// Sidebar Navigation
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', (e) => {
+    const tabName = item.dataset.tab;
+    switchTab(tabName);
+    document.getElementById('sidebar').classList.remove('open');
+  });
+});
+
+function switchTab(tabName) {
+  document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+  document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+  document.querySelectorAll('.form-section, .jobs-section, .summary-section, .settings-section').forEach(section => {
+    section.classList.remove('active');
+  });
+  document.getElementById(tabName === 'dashboard' ? 'dashboard' : tabName).classList.add('active');
+
+  const titles = {
+    dashboard: '📊 Dashboard',
+    form: '➕ Add Job',
+    jobs: '📋 Jobs',
+    summary: '💹 Summary',
+    settings: '⚙️ Settings'
+  };
+  document.getElementById('sectionTitle').textContent = titles[tabName];
+}
+
+document.getElementById('menuToggle').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
+});
+
+document.addEventListener('click', (e) => {
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('menuToggle');
+  if (!sidebar.contains(e.target) && !toggle.contains(e.target) && sidebar.classList.contains('open')) {
+    sidebar.classList.remove('open');
+  }
+});
+
 window.addEventListener('online', () => {
   isOnline = true;
-  updateSyncStatus('✅ Connected to Firebase');
+  updateSyncStatus('✅ Connected');
   syncToFirebase();
 });
 
 window.addEventListener('offline', () => {
   isOnline = false;
-  updateSyncStatus('⚠️ Offline - Data saved locally');
+  updateSyncStatus('⚠️ Offline');
 });
 
-function updateSyncStatus(status) {
-  const el = document.getElementById('syncStatus');
-  if (status.includes('✅')) {
-    el.textContent = status;
-    el.classList.remove('offline');
-  } else if (status.includes('⚠️')) {
-    el.textContent = status;
-    el.classList.add('offline');
-  } else {
-    el.textContent = '🔄 Syncing...';
-    el.classList.remove('offline');
-  }
-}
-
-function formatCurrency(num, type = 'usd') {
-  const formatted = Math.round(num * 100) / 100;
-  if (type === 'khr') {
-    const khr = Math.round(formatted * USD_TO_KHR);
+function formatCurrency(amount, currency) {
+  if (currency === 'khr') {
+    const khr = Math.round(amount * USD_TO_KHR);
     return khr.toLocaleString() + ' ៛';
   }
-  return formatted.toLocaleString() + ' $';
+  const formatted = amount.toFixed(2);
+  return '$' + formatted.toLocaleString();
 }
 
 function formatDate(dateStr) {
@@ -690,6 +1158,35 @@ function updateDashboard() {
   document.getElementById('sumIncomeKHR').textContent = formatCurrency(totalIncome, 'khr');
   document.getElementById('sumCostKHR').textContent = formatCurrency(totalCost, 'khr');
   document.getElementById('sumProfitKHR').textContent = formatCurrency(totalProfit, 'khr');
+
+  document.getElementById('summaryIncomeUSD').textContent = formatCurrency(totalIncome, 'usd');
+  document.getElementById('summaryCostUSD').textContent = formatCurrency(totalCost, 'usd');
+  document.getElementById('summaryProfitUSD').textContent = formatCurrency(totalProfit, 'usd');
+
+  document.getElementById('summaryIncomeKHR').textContent = formatCurrency(totalIncome, 'khr');
+  document.getElementById('summaryCostKHR').textContent = formatCurrency(totalCost, 'khr');
+  document.getElementById('summaryProfitKHR').textContent = formatCurrency(totalProfit, 'khr');
+}
+
+function updatePreview() {
+  const incomeAmount = parseFloat(document.getElementById('income').value) || 0;
+  const costAmount = parseFloat(document.getElementById('cost').value) || 0;
+  const incomeCurrency = document.getElementById('incomeCurrency').value;
+  const costCurrency = document.getElementById('costCurrency').value;
+
+  const income = convertToUSD(incomeAmount, incomeCurrency);
+  const cost = convertToUSD(costAmount, costCurrency);
+  const profit = income - cost;
+
+  document.getElementById('previewProfit').textContent = formatCurrency(profit, 'usd');
+  document.getElementById('previewProfit').style.color = profit >= 0 ? '#3b82f6' : '#ef4444';
+}
+
+function formatJobDisplay(amount, currency) {
+  if (currency === 'khr') {
+    return Math.round(amount).toLocaleString() + ' ៛';
+  }
+  return '$' + amount.toFixed(2).toLocaleString();
 }
 
 function renderJobs() {
@@ -704,111 +1201,61 @@ function renderJobs() {
   
   list.innerHTML = sorted.map((job, idx) => {
     const profit = job.income - job.cost;
-    const incomeDisplay = job.incomeAmount ? `${formatCurrency(job.incomeAmount, job.incomeCurrency)}` : formatCurrency(job.income, 'usd');
-    const costDisplay = job.costAmount ? `${formatCurrency(job.costAmount, job.costCurrency)}` : formatCurrency(job.cost, 'usd');
+    const incomeDisplay = job.incomeAmount ? `${formatJobDisplay(job.incomeAmount, job.incomeCurrency)}` : formatCurrency(job.income, 'usd');
+    const costDisplay = job.costAmount ? `${formatJobDisplay(job.costAmount, job.costCurrency)}` : formatCurrency(job.cost, 'usd');
+    const phoneHtml = job.customerPhone ? `<a href="tel:${job.customerPhone}" class="job-phone">📱 ${job.customerPhone}</a>` : '';
+    const statusEmoji = {
+      'completed': '✅',
+      'pending': '⏳',
+      'on-hold': '🛑',
+      'in-progress': '🔧'
+    };
+    const originalIndex = jobs.indexOf(job);
     
     return `
       <div class="job-item">
         <div class="job-header">
-          <div class="job-title">📱 ${job.description}</div>
-          <div class="job-date">${formatDate(job.date)}</div>
+          <div class="job-customer">
+            ${job.customerName ? `<div class="job-name">${job.customerName}</div>` : ''}
+            ${phoneHtml}
+          </div>
+          <span class="job-status ${job.status || 'completed'}">${statusEmoji[job.status || 'completed']} ${(job.status || 'completed').toUpperCase()}</span>
         </div>
+        
         <div class="job-details">
-          <div class="job-detail">
-            <div class="job-detail-label">ទទួលបាន<br>Receive</div>
-            <div class="job-detail-value income">${incomeDisplay}</div>
+          <div class="job-info">
+            <div class="job-desc">${job.description}</div>
+            <div class="job-meta">${formatDate(job.date)}</div>
+            ${job.notes ? `<div class="job-notes">📝 ${job.notes}</div>` : ''}
           </div>
-          <div class="job-detail">
-            <div class="job-detail-label">ដេីមទុន<br>Capital</div>
-            <div class="job-detail-value cost">${costDisplay}</div>
+          <div class="job-amount">
+            <div class="job-income">+${incomeDisplay}</div>
+            <div class="job-cost">-${costDisplay}</div>
           </div>
-          <div class="job-detail">
-            <div class="job-detail-label">ចំណេញ<br>Earnings</div>
-            <div class="job-detail-value profit">${profit >= 0 ? '+' : ''}${formatCurrency(profit, 'usd')}</div>
-          </div>
+        </div>
+
+        <div class="job-actions">
+          <button class="btn btn-secondary btn-sm" onclick="editJob(${originalIndex})">✏️ Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteJob(${originalIndex})">🗑️ Delete</button>
         </div>
       </div>
     `;
   }).join('');
 }
 
-function renderSearchJobs() {
-  const searchInput = document.getElementById('searchInput').value.toLowerCase();
-  const list = document.getElementById('jobListSearch');
+function updateSyncStatus(status) {
+  document.getElementById('syncStatus').textContent = status;
+  document.getElementById('syncStatusMini').textContent = status;
   
-  if (jobs.length === 0) {
-    list.innerHTML = '<div class="empty-state"><p>មិនមានការងារនៅឡើយទេ / No jobs yet</p></div>';
-    return;
-  }
-
-  let filtered = jobs;
-  if (searchInput) {
-    filtered = jobs.filter(job => 
-      job.description.toLowerCase().includes(searchInput) ||
-      formatDate(job.date).toLowerCase().includes(searchInput) ||
-      formatCurrency(job.income, 'usd').toLowerCase().includes(searchInput) ||
-      formatCurrency(job.cost, 'usd').toLowerCase().includes(searchInput)
-    );
-  }
-
-  if (filtered.length === 0) {
-    list.innerHTML = '<div class="empty-state"><p>រកមិនឃើញការងារ / No matching jobs found</p></div>';
-    return;
-  }
-
-  const sorted = [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
-  
-  list.innerHTML = sorted.map((job, idx) => {
-    const profit = job.income - job.cost;
-    const incomeDisplay = job.incomeAmount ? `${formatCurrency(job.incomeAmount, job.incomeCurrency)}` : formatCurrency(job.income, 'usd');
-    const costDisplay = job.costAmount ? `${formatCurrency(job.costAmount, job.costCurrency)}` : formatCurrency(job.cost, 'usd');
-    
-    return `
-      <div class="job-item">
-        <div class="job-header">
-          <div class="job-title">📱 ${job.description}</div>
-          <div class="job-date">${formatDate(job.date)}</div>
-        </div>
-        <div class="job-details">
-          <div class="job-detail">
-            <div class="job-detail-label">ទទួលបាន<br>Receive</div>
-            <div class="job-detail-value income">${incomeDisplay}</div>
-          </div>
-          <div class="job-detail">
-            <div class="job-detail-label">ដេីមទុន<br>Capital</div>
-            <div class="job-detail-value cost">${costDisplay}</div>
-          </div>
-          <div class="job-detail">
-            <div class="job-detail-label">ចំណេញ<br>Earnings</div>
-            <div class="job-detail-value profit">${profit >= 0 ? '+' : ''}${formatCurrency(profit, 'usd')}</div>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-function switchTab(tab) {
-  const currentTab = document.getElementById('currentTab');
-  const historyTab = document.getElementById('historyTab');
-  const btnCurrent = document.getElementById('tabCurrent');
-  const btnHistory = document.getElementById('tabHistory');
-
-  if (tab === 'current') {
-    currentTab.style.display = 'block';
-    historyTab.style.display = 'none';
-    btnCurrent.classList.add('active');
-    btnHistory.classList.remove('active');
-  } else {
-    currentTab.style.display = 'none';
-    historyTab.style.display = 'block';
-    btnCurrent.classList.remove('active');
-    btnHistory.classList.add('active');
-    renderSearchJobs();
+  if (status.includes('✅')) {
+    document.getElementById('syncStatus').className = 'sync-status';
+  } else if (status.includes('⚠️')) {
+    document.getElementById('syncStatus').className = 'sync-status offline';
+  } else if (status.includes('Syncing')) {
+    document.getElementById('syncStatus').className = 'sync-status syncing';
   }
 }
 
-// Firebase Sync Functions
 async function syncToFirebase() {
   if (!db || !isOnline || jobs.length === 0) return;
   
@@ -816,83 +1263,40 @@ async function syncToFirebase() {
     clearTimeout(syncTimeout);
     updateSyncStatus('Syncing...');
     
-    // Create timeout promise
     const timeoutPromise = new Promise((_, reject) => 
       setTimeout(() => reject(new Error('Firebase sync timeout')), 5000)
     );
     
-    // Save to Firestore with timeout
     const docRef = db.collection('repair-profit').doc('jobs');
     const savePromise = docRef.set({
       jobs: jobs,
+      exchangeRate: USD_TO_KHR,
       lastSync: new Date().toISOString()
     });
     
     await Promise.race([savePromise, timeoutPromise]);
     
-    updateSyncStatus('✅ Synced with Firebase');
-    console.log('Firebase sync successful');
-    
-    // Sync every 30 seconds
+    updateSyncStatus('✅ Synced');
     syncTimeout = setTimeout(syncToFirebase, 30000);
   } catch (err) {
     console.error('Sync error:', err);
-    if (err.message === 'Firebase sync timeout') {
-      updateSyncStatus('⚠️ Firebase busy - data saved locally');
-      console.warn('Firebase sync timed out, but data is saved in localStorage');
-    } else {
-      updateSyncStatus('⚠️ Offline - data saved locally');
-    }
+    updateSyncStatus('⚠️ Offline');
     syncTimeout = setTimeout(syncToFirebase, 10000);
   }
 }
 
-async function loadFromFirebase() {
-  if (!db || !isOnline) return;
-  
-  try {
-    const doc = await db.collection('repair-profit').doc('jobs').get();
-    if (doc.exists && doc.data().jobs) {
-      jobs = doc.data().jobs;
-      localStorage.setItem('repairJobs', JSON.stringify(jobs));
-      updateDashboard();
-      renderJobs();
-      updateSyncStatus('✅ Loaded from Firebase');
-    }
-  } catch (err) {
-    console.error('Load error:', err);
-  }
-}
-
-document.getElementById('date').valueAsDate = new Date();
-
-document.getElementById('income').addEventListener('input', updatePreview);
-document.getElementById('cost').addEventListener('input', updatePreview);
-document.getElementById('incomeCurrency').addEventListener('change', updatePreview);
-document.getElementById('costCurrency').addEventListener('change', updatePreview);
-
-function updatePreview() {
-  const incomeAmount = parseFloat(document.getElementById('income').value) || 0;
+// ADD JOB
+document.getElementById('addBtn').addEventListener('click', () => {
+  const customerName = document.getElementById('customerName').value || '';
+  const customerPhone = document.getElementById('customerPhone').value || '';
+  const description = document.getElementById('jobDesc').value || 'Repair Job';
+  const incomeAmount = parseFloat(document.getElementById('income').value);
   const costAmount = parseFloat(document.getElementById('cost').value) || 0;
   const incomeCurrency = document.getElementById('incomeCurrency').value;
   const costCurrency = document.getElementById('costCurrency').value;
-  
-  const incomeUSD = convertToUSD(incomeAmount, incomeCurrency);
-  const costUSD = convertToUSD(costAmount, costCurrency);
-  const profit = incomeUSD - costUSD;
-  
-  const profitEl = document.getElementById('previewProfit');
-  profitEl.textContent = formatCurrency(profit, 'usd');
-  profitEl.style.color = profit >= 0 ? '#10b981' : '#ef4444';
-}
-
-document.getElementById('addBtn').addEventListener('click', () => {
-  const description = document.getElementById('jobDesc').value || 'Repair Job';
-  const incomeAmount = parseFloat(document.getElementById('income').value);
-  const costAmount = parseFloat(document.getElementById('cost').value);
-  const incomeCurrency = document.getElementById('incomeCurrency').value;
-  const costCurrency = document.getElementById('costCurrency').value;
   const date = document.getElementById('date').value;
+  const status = document.getElementById('jobStatus').value;
+  const notes = document.getElementById('jobNotes').value || '';
 
   if (!incomeAmount || incomeAmount <= 0) {
     alert('សូមបញ្ចូលចំនួនលុយដែលទទួលបាន / Please enter income amount');
@@ -907,26 +1311,31 @@ document.getElementById('addBtn').addEventListener('click', () => {
   const income = convertToUSD(incomeAmount, incomeCurrency);
   const cost = convertToUSD(costAmount, costCurrency);
 
-  // Disable button and show saving state
   const btn = document.getElementById('addBtn');
   btn.disabled = true;
   btn.textContent = '💾 Saving...';
   
-  jobs.push({ description, income, cost, date, incomeAmount, costAmount, incomeCurrency, costCurrency });
+  jobs.push({ 
+    customerName, customerPhone, description, income, cost, date, 
+    incomeAmount, costAmount, incomeCurrency, costCurrency, status, notes 
+  });
   localStorage.setItem('repairJobs', JSON.stringify(jobs));
   
+  document.getElementById('customerName').value = '';
+  document.getElementById('customerPhone').value = '';
   document.getElementById('jobDesc').value = '';
   document.getElementById('income').value = '';
-  document.getElementById('cost').value = '';
+  document.getElementById('cost').value = '0';
   document.getElementById('incomeCurrency').value = 'usd';
   document.getElementById('costCurrency').value = 'usd';
+  document.getElementById('jobStatus').value = 'completed';
+  document.getElementById('jobNotes').value = '';
   document.getElementById('date').valueAsDate = new Date();
   updatePreview();
   
   updateDashboard();
   renderJobs();
   
-  // Update UI immediately, sync in background with timeout
   setTimeout(() => {
     syncToFirebase().finally(() => {
       btn.disabled = false;
@@ -935,29 +1344,181 @@ document.getElementById('addBtn').addEventListener('click', () => {
   }, 50);
 });
 
-document.getElementById('resetBtn').addEventListener('click', () => {
-  if (confirm('លុបទិន្នន័យទាំងអស់ / Delete all jobs?')) {
-    jobs = [];
-    localStorage.removeItem('repairJobs');
+// EDIT JOB
+function editJob(index) {
+  editingIndex = index;
+  const job = jobs[index];
+  
+  document.getElementById('editCustomerName').value = job.customerName || '';
+  document.getElementById('editCustomerPhone').value = job.customerPhone || '';
+  document.getElementById('editJobDesc').value = job.description || '';
+  document.getElementById('editIncome').value = job.incomeAmount || '';
+  document.getElementById('editIncomeCurrency').value = job.incomeCurrency || 'usd';
+  document.getElementById('editCost').value = job.costAmount || '';
+  document.getElementById('editCostCurrency').value = job.costCurrency || 'usd';
+  document.getElementById('editJobStatus').value = job.status || 'completed';
+  document.getElementById('editDate').value = job.date || '';
+  document.getElementById('editJobNotes').value = job.notes || '';
+  
+  document.getElementById('editModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('editModal').classList.remove('open');
+  editingIndex = -1;
+}
+
+document.getElementById('saveEditBtn').addEventListener('click', () => {
+  if (editingIndex === -1) return;
+
+  const job = jobs[editingIndex];
+  job.customerName = document.getElementById('editCustomerName').value || '';
+  job.customerPhone = document.getElementById('editCustomerPhone').value || '';
+  job.description = document.getElementById('editJobDesc').value || 'Repair Job';
+  job.incomeAmount = parseFloat(document.getElementById('editIncome').value);
+  job.costAmount = parseFloat(document.getElementById('editCost').value) || 0;
+  job.incomeCurrency = document.getElementById('editIncomeCurrency').value;
+  job.costCurrency = document.getElementById('editCostCurrency').value;
+  job.income = convertToUSD(job.incomeAmount, job.incomeCurrency);
+  job.cost = convertToUSD(job.costAmount, job.costCurrency);
+  job.status = document.getElementById('editJobStatus').value;
+  job.date = document.getElementById('editDate').value;
+  job.notes = document.getElementById('editJobNotes').value || '';
+
+  localStorage.setItem('repairJobs', JSON.stringify(jobs));
+  updateDashboard();
+  renderJobs();
+  syncToFirebase();
+  closeModal();
+});
+
+// DELETE JOB
+function deleteJob(index) {
+  if (confirm('ចាប់ផ្តើមលុប? / Delete this job?')) {
+    jobs.splice(index, 1);
+    localStorage.setItem('repairJobs', JSON.stringify(jobs));
     updateDashboard();
     renderJobs();
     syncToFirebase();
   }
+}
+
+// CLEAR FORM
+document.getElementById('resetFormBtn').addEventListener('click', () => {
+  document.getElementById('customerName').value = '';
+  document.getElementById('customerPhone').value = '';
+  document.getElementById('jobDesc').value = '';
+  document.getElementById('income').value = '';
+  document.getElementById('cost').value = '0';
+  document.getElementById('jobStatus').value = 'completed';
+  document.getElementById('jobNotes').value = '';
+  document.getElementById('date').valueAsDate = new Date();
+  updatePreview();
 });
 
-document.getElementById('searchInput').addEventListener('input', renderSearchJobs);
+// SEARCH & FILTER
+document.getElementById('searchBox').addEventListener('input', (e) => {
+  const query = e.target.value.toLowerCase();
+  if (!query) {
+    renderJobs();
+    return;
+  }
+
+  const filtered = jobs.filter(job => 
+    (job.customerName && job.customerName.toLowerCase().includes(query)) ||
+    (job.customerPhone && job.customerPhone.toLowerCase().includes(query)) ||
+    job.description.toLowerCase().includes(query) ||
+    formatDate(job.date).toLowerCase().includes(query)
+  );
+
+  if (filtered.length === 0) {
+    document.getElementById('jobList').innerHTML = '<div class="empty-state"><p>No results found</p></div>';
+  } else {
+    const sorted = [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
+    const statusEmoji = {
+      'completed': '✅',
+      'pending': '⏳',
+      'on-hold': '🛑',
+      'in-progress': '🔧'
+    };
+    
+    document.getElementById('jobList').innerHTML = sorted.map((job) => {
+      const incomeDisplay = job.incomeAmount ? `${formatJobDisplay(job.incomeAmount, job.incomeCurrency)}` : formatCurrency(job.income, 'usd');
+      const costDisplay = job.costAmount ? `${formatJobDisplay(job.costAmount, job.costCurrency)}` : formatCurrency(job.cost, 'usd');
+      const phoneHtml = job.customerPhone ? `<a href="tel:${job.customerPhone}" class="job-phone">📱 ${job.customerPhone}</a>` : '';
+      const originalIndex = jobs.indexOf(job);
+      
+      return `
+        <div class="job-item">
+          <div class="job-header">
+            <div class="job-customer">
+              ${job.customerName ? `<div class="job-name">${job.customerName}</div>` : ''}
+              ${phoneHtml}
+            </div>
+            <span class="job-status ${job.status || 'completed'}">${statusEmoji[job.status || 'completed']} ${(job.status || 'completed').toUpperCase()}</span>
+          </div>
+          
+          <div class="job-details">
+            <div class="job-info">
+              <div class="job-desc">${job.description}</div>
+              <div class="job-meta">${formatDate(job.date)}</div>
+              ${job.notes ? `<div class="job-notes">📝 ${job.notes}</div>` : ''}
+            </div>
+            <div class="job-amount">
+              <div class="job-income">+${incomeDisplay}</div>
+              <div class="job-cost">-${costDisplay}</div>
+            </div>
+          </div>
+
+          <div class="job-actions">
+            <button class="btn btn-secondary btn-sm" onclick="editJob(${originalIndex})">✏️ Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteJob(${originalIndex})">🗑️ Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+});
+
+// SETTINGS
+document.getElementById('saveExchangeBtn').addEventListener('click', () => {
+  const newRate = parseInt(document.getElementById('exchangeRate').value);
+  if (newRate && newRate > 0) {
+    USD_TO_KHR = newRate;
+    localStorage.setItem('exchangeRate', USD_TO_KHR);
+    updateDashboard();
+    renderJobs();
+    syncToFirebase();
+    alert('✅ Exchange rate updated!');
+  } else {
+    alert('Please enter a valid exchange rate');
+  }
+});
+
+document.getElementById('clearAllBtn').addEventListener('click', () => {
+  if (confirm('⚠️ This will delete ALL jobs! Are you sure?')) {
+    if (confirm('🚨 Are you REALLY sure? This cannot be undone!')) {
+      jobs = [];
+      localStorage.setItem('repairJobs', JSON.stringify(jobs));
+      updateDashboard();
+      renderJobs();
+      syncToFirebase();
+      alert('✅ All jobs deleted');
+    }
+  }
+});
+
+// INPUT LISTENERS
+document.getElementById('income').addEventListener('input', updatePreview);
+document.getElementById('cost').addEventListener('input', updatePreview);
+document.getElementById('incomeCurrency').addEventListener('change', updatePreview);
+document.getElementById('costCurrency').addEventListener('change', updatePreview);
 
 // Initialize
 updateDashboard();
 renderJobs();
-updatePreview();
-loadFromFirebase();
-if (isOnline) {
-  updateSyncStatus('✅ Connected to Firebase');
-  syncToFirebase();
-} else {
-  updateSyncStatus('⚠️ Offline - Data saved locally');
-}
+updateSyncStatus('✅ Ready');
+console.log('Repair Profit v' + APP_VERSION + ' loaded');
 </script>
 </body>
 </html>
