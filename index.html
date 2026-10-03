@@ -50,6 +50,17 @@ body {
   color: #888;
 }
 
+.sync-status {
+  font-size: 11px;
+  color: #10b981;
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+.sync-status.offline {
+  color: #ef4444;
+}
+
 .dashboard {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -450,6 +461,7 @@ button:hover {
   <div class="app-header">
     <h1>📱 Repair Profit</h1>
     <p>Mobile Repair Tracker / កម្មវិធីបង្កើតប្រាក់ចំណេញ</p>
+    <div class="sync-status" id="syncStatus">🔄 Syncing with Firebase...</div>
   </div>
 
   <div class="dashboard">
@@ -471,7 +483,7 @@ button:hover {
     <h3>📊 សង្ខេប / Summary</h3>
     
     <div class="storage-info">
-      ✅ ទិន្នន័យរក្សាទុកដោយស្វយ័ត / Data auto-saved (Won't disappear)
+      ✅ Auto-synced with Firebase / ទិន្នន័យរក្សាទុកដោយស្វយ័ត (Never disappear)
     </div>
 
     <div class="summary-grid">
@@ -580,9 +592,56 @@ button:hover {
   </div>
 </div>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js"></script>
+
 <script>
+// Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyAjo9tpTz3yIM9_hbKdOBL0sEaxK7vucEM",
+  authDomain: "repair-profit.firebaseapp.com",
+  projectId: "repair-profit",
+  storageBucket: "repair-profit.firebasestorage.app",
+  messagingSenderId: "565805773489",
+  appId: "1:565805773489:web:8161b557a60e6ac0ac6890",
+  measurementId: "G-T93MWYTDFD"
+};
+
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore(app);
+
 let jobs = JSON.parse(localStorage.getItem('repairJobs') || '[]');
+let isOnline = navigator.onLine;
 const USD_TO_KHR = 4100;
+let syncTimeout;
+
+// Check online/offline status
+window.addEventListener('online', () => {
+  isOnline = true;
+  updateSyncStatus('✅ Connected to Firebase');
+  syncToFirebase();
+});
+
+window.addEventListener('offline', () => {
+  isOnline = false;
+  updateSyncStatus('⚠️ Offline - Data saved locally');
+});
+
+function updateSyncStatus(status) {
+  const el = document.getElementById('syncStatus');
+  if (status.includes('✅')) {
+    el.textContent = status;
+    el.classList.remove('offline');
+  } else if (status.includes('⚠️')) {
+    el.textContent = status;
+    el.classList.add('offline');
+  } else {
+    el.textContent = '🔄 Syncing...';
+    el.classList.remove('offline');
+  }
+}
 
 function formatCurrency(num, type = 'usd') {
   const formatted = Math.round(num * 100) / 100;
@@ -742,6 +801,49 @@ function switchTab(tab) {
   }
 }
 
+// Firebase Sync Functions
+async function syncToFirebase() {
+  if (!isOnline || jobs.length === 0) return;
+  
+  try {
+    clearTimeout(syncTimeout);
+    updateSyncStatus('Syncing...');
+    
+    // Save to Firestore
+    const docRef = db.collection('repair-profit').doc('jobs');
+    await docRef.set({
+      jobs: jobs,
+      lastSync: new Date().toISOString()
+    });
+    
+    updateSyncStatus('✅ Synced with Firebase');
+    
+    // Sync every 30 seconds
+    syncTimeout = setTimeout(syncToFirebase, 30000);
+  } catch (err) {
+    console.error('Sync error:', err);
+    updateSyncStatus('⚠️ Sync failed - retrying...');
+    syncTimeout = setTimeout(syncToFirebase, 10000);
+  }
+}
+
+async function loadFromFirebase() {
+  if (!isOnline) return;
+  
+  try {
+    const doc = await db.collection('repair-profit').doc('jobs').get();
+    if (doc.exists && doc.data().jobs) {
+      jobs = doc.data().jobs;
+      localStorage.setItem('repairJobs', JSON.stringify(jobs));
+      updateDashboard();
+      renderJobs();
+      updateSyncStatus('✅ Loaded from Firebase');
+    }
+  } catch (err) {
+    console.error('Load error:', err);
+  }
+}
+
 document.getElementById('date').valueAsDate = new Date();
 
 document.getElementById('income').addEventListener('input', updatePreview);
@@ -798,6 +900,7 @@ document.getElementById('addBtn').addEventListener('click', () => {
   
   updateDashboard();
   renderJobs();
+  syncToFirebase();
 });
 
 document.getElementById('resetBtn').addEventListener('click', () => {
@@ -806,14 +909,23 @@ document.getElementById('resetBtn').addEventListener('click', () => {
     localStorage.removeItem('repairJobs');
     updateDashboard();
     renderJobs();
+    syncToFirebase();
   }
 });
 
 document.getElementById('searchInput').addEventListener('input', renderSearchJobs);
 
+// Initialize
 updateDashboard();
 renderJobs();
 updatePreview();
+loadFromFirebase();
+if (isOnline) {
+  updateSyncStatus('✅ Connected to Firebase');
+  syncToFirebase();
+} else {
+  updateSyncStatus('⚠️ Offline - Data saved locally');
+}
 </script>
 </body>
 </html>
