@@ -5,1069 +5,318 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Repair Profit">
-<title>📱 Repair Profit v2.0</title>
+<meta name="apple-mobile-web-app-title" content="Repair POS">
+<title>🏪 Repair POS v1.0</title>
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-  width: 100%;
-  height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Khmer OS', sans-serif;
-  background: #0a0a0a;
-  color: #ffffff;
-}
-
-.app-wrapper {
-  display: flex;
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* SIDEBAR */
-.sidebar {
-  width: 260px;
-  background: #1a1a1a;
-  border-right: 0.5px solid #333;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  padding-bottom: 20px;
-  position: relative;
-}
-
-.sidebar-header {
-  padding: 20px;
-  text-align: center;
-  border-bottom: 0.5px solid #333;
-  background: #0f0f0f;
-}
-
-.sidebar-header h2 {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.sidebar-header .version {
-  font-size: 11px;
-  color: #888;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-.sidebar-nav {
-  flex: 1;
-  padding: 12px 0;
-}
-
-.nav-item {
-  padding: 14px 16px;
-  margin: 0 8px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  color: #888;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: 1px solid transparent;
-}
-
-.nav-item:hover {
-  background: #2a2a2a;
-  color: #fff;
-}
-
-.nav-item.active {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  color: #fff;
-  border-color: #1e40af;
-}
-
-.nav-icon {
-  font-size: 18px;
-}
-
-.sidebar-footer {
-  padding: 12px;
-  border-top: 0.5px solid #333;
-  text-align: center;
-  font-size: 11px;
-  color: #666;
-}
-
-/* MAIN CONTENT */
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  background: #0a0a0a;
-}
-
-.app-header {
-  padding: 16px 24px;
-  border-bottom: 0.5px solid #333;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.app-header h1 {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.sync-status {
-  font-size: 11px;
-  color: #10b981;
-  padding: 4px 8px;
-  background: #064e3b;
-  border-radius: 4px;
-  text-transform: uppercase;
-}
-
-.sync-status.offline {
-  color: #ef4444;
-  background: #7f1d1d;
-}
-
-.sync-status.syncing {
-  color: #f59e0b;
-  background: #78350f;
-}
-
-/* DASHBOARD */
-.dashboard {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  padding: 16px 24px;
-  margin: 0;
-}
-
-.stat-card {
-  background: #1a1a1a;
-  border-radius: 12px;
-  padding: 16px;
-  border: 0.5px solid #333;
-  text-align: center;
-}
-
-.stat-card.income {
-  border-left: 3px solid #10b981;
-}
-
-.stat-card.cost {
-  border-left: 3px solid #ef4444;
-}
-
-.stat-card.profit {
-  border-left: 3px solid #3b82f6;
-  background: #1e3a8a;
-}
-
-.stat-label {
-  font-size: 11px;
-  color: #888;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
-  line-height: 1.4;
-}
-
-.stat-value {
-  font-size: 18px;
-  font-weight: 700;
-}
-
-/* FORM SECTION */
-.form-section {
-  display: none;
-  padding: 24px;
-}
-
-.form-section.active {
-  display: block;
-}
-
-.form-section h2 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  color: #fff;
-}
-
-.form-group {
-  margin-bottom: 16px;
-}
-
-.form-group label {
-  display: block;
-  font-size: 13px;
-  font-weight: 500;
-  color: #888;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-  width: 100%;
-  padding: 12px 14px;
-  background: #1a1a1a;
-  border: 0.5px solid #333;
-  border-radius: 8px;
-  color: #fff;
-  font-size: 14px;
-  font-family: inherit;
-}
-
-.form-group textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: #3b82f6;
-  background: #252525;
-}
-
-.input-row {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 12px;
-}
-
-.input-row-3 {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 12px;
-}
-
-.preview-box {
-  background: #1a1a1a;
-  border: 0.5px solid #333;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.preview-label {
-  font-size: 11px;
-  color: #888;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
-.preview-value {
-  font-size: 28px;
-  font-weight: 700;
-  color: #3b82f6;
-}
-
-.form-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.btn {
-  padding: 14px 18px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  color: #fff;
-}
-
-.btn-primary:active {
-  transform: scale(0.95);
-}
-
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background: #2a2a2a;
-  color: #888;
-  border: 0.5px solid #444;
-}
-
-.btn-secondary:active {
-  background: #333;
-}
-
-.btn-danger {
-  background: #ef4444;
-  color: #fff;
-}
-
-.btn-sm {
-  padding: 8px 12px;
-  font-size: 12px;
-  margin: 0 4px;
-}
-
-/* JOBS LIST */
-.jobs-section {
-  display: none;
-  padding: 24px;
-}
-
-.jobs-section.active {
-  display: block;
-}
-
-.jobs-section h2 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 16px;
-}
-
-.search-box {
-  margin-bottom: 16px;
-}
-
-.search-box input {
-  width: 100%;
-  padding: 12px 14px;
-  background: #1a1a1a;
-  border: 0.5px solid #333;
-  border-radius: 8px;
-  color: #fff;
-  font-size: 14px;
-}
-
-.job-item {
-  background: #1a1a1a;
-  border: 0.5px solid #333;
-  border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 12px;
-}
-
-.job-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: start;
-  margin-bottom: 12px;
-}
-
-.job-customer {
-  flex: 1;
-}
-
-.job-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 4px;
-}
-
-.job-phone {
-  font-size: 12px;
-  color: #3b82f6;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.job-phone:hover {
-  text-decoration: underline;
-}
-
-.job-status {
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.job-status.completed {
-  background: #10b981;
-  color: #fff;
-}
-
-.job-status.pending {
-  background: #f59e0b;
-  color: #000;
-}
-
-.job-status.on-hold {
-  background: #ef4444;
-  color: #fff;
-}
-
-.job-status.in-progress {
-  background: #3b82f6;
-  color: #fff;
-}
-
-.job-details {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 16px;
-  padding-top: 12px;
-  border-top: 0.5px solid #333;
-  margin-bottom: 12px;
-}
-
-.job-info {
-  flex: 1;
-}
-
-.job-desc {
-  font-size: 13px;
-  color: #fff;
-  margin-bottom: 4px;
-}
-
-.job-meta {
-  font-size: 11px;
-  color: #888;
-  margin-bottom: 6px;
-}
-
-.job-notes {
-  font-size: 12px;
-  color: #aaa;
-  font-style: italic;
-  margin-top: 6px;
-  padding: 8px;
-  background: #252525;
-  border-radius: 4px;
-  border-left: 2px solid #3b82f6;
-}
-
-.job-amount {
-  text-align: right;
-}
-
-.job-income {
-  font-size: 14px;
-  font-weight: 600;
-  color: #10b981;
-  margin-bottom: 4px;
-}
-
-.job-cost {
-  font-size: 12px;
-  color: #ef4444;
-}
-
-.job-actions {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-  padding-top: 12px;
-  border-top: 0.5px solid #333;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: #666;
-}
-
-.empty-state p {
-  font-size: 14px;
-}
-
-/* SUMMARY SECTION */
-.summary-section {
-  display: none;
-  padding: 24px;
-}
-
-.summary-section.active {
-  display: block;
-}
-
-.summary-section h2 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-
-.summary-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.summary-box {
-  background: #1a1a1a;
-  border: 0.5px solid #333;
-  border-radius: 8px;
-  padding: 16px;
-}
-
-.summary-title {
-  font-size: 11px;
-  color: #888;
-  text-transform: uppercase;
-  margin-bottom: 12px;
-  letter-spacing: 0.5px;
-}
-
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  padding-bottom: 12px;
-  border-bottom: 0.5px solid #333;
-}
-
-.summary-row:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-.summary-label {
-  font-size: 12px;
-  color: #888;
-}
-
-.summary-amount {
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-}
-
-.summary-amount.income {
-  color: #10b981;
-}
-
-.summary-amount.cost {
-  color: #ef4444;
-}
-
-.summary-amount.profit {
-  color: #3b82f6;
-  font-size: 16px;
-}
-
-/* SETTINGS SECTION */
-.settings-section {
-  display: none;
-  padding: 24px;
-}
-
-.settings-section.active {
-  display: block;
-}
-
-.settings-section h2 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-
-.settings-box {
-  background: #1a1a1a;
-  border: 0.5px solid #333;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 16px;
-}
-
-.settings-box h3 {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: #fff;
-}
-
-/* MODAL */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 1000;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal.open {
-  display: flex;
-}
-
-.modal-content {
-  background: #1a1a1a;
-  border: 0.5px solid #333;
-  border-radius: 12px;
-  padding: 24px;
-  max-width: 500px;
-  width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.modal-header h2 {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-/* MOBILE RESPONSIVE */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Khmer OS', sans-serif; background: #0a0a0a; color: #ffffff; }
+.app-wrapper { display: flex; height: 100vh; overflow: hidden; }
+.sidebar { width: 260px; background: #1a1a1a; border-right: 0.5px solid #333; display: flex; flex-direction: column; overflow-y: auto; padding-bottom: 20px; }
+.sidebar-header { padding: 20px; text-align: center; border-bottom: 0.5px solid #333; background: #0f0f0f; }
+.sidebar-header h2 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+.sidebar-header .version { font-size: 11px; color: #888; }
+.mode-switcher { display: flex; padding: 8px; gap: 8px; margin: 12px; background: #252525; border-radius: 8px; }
+.mode-btn { flex: 1; padding: 10px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; background: #333; color: #888; }
+.mode-btn.active { background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff; }
+.sidebar-nav { flex: 1; padding: 12px 0; }
+.nav-item { padding: 14px 16px; margin: 0 8px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; color: #888; transition: all 0.2s; display: flex; align-items: center; gap: 10px; }
+.nav-item:hover { background: #2a2a2a; color: #fff; }
+.nav-item.active { background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff; }
+.main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #0a0a0a; }
+.app-header { padding: 16px 24px; border-bottom: 0.5px solid #333; display: flex; align-items: center; justify-content: space-between; }
+.app-header h1 { font-size: 20px; font-weight: 600; }
+.content-section { display: none; flex: 1; overflow-y: auto; padding: 24px; }
+.content-section.active { display: block; }
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 13px; font-weight: 500; color: #888; text-transform: uppercase; margin-bottom: 8px; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 14px; background: #1a1a1a; border: 0.5px solid #333; border-radius: 8px; color: #fff; font-size: 14px; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #3b82f6; background: #252525; }
+.btn { padding: 12px 16px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.btn-primary { background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff; }
+.btn-secondary { background: #2a2a2a; color: #888; }
+.btn-danger { background: #ef4444; color: #fff; }
+.btn-success { background: #10b981; color: #fff; }
+.btn-sm { padding: 8px 12px; font-size: 12px; margin: 0 4px; }
+.input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.item-card { background: #1a1a1a; border: 0.5px solid #333; border-radius: 8px; padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: start; }
+.item-info { flex: 1; }
+.item-name { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+.item-price { font-size: 16px; font-weight: 700; color: #10b981; }
+.item-actions { display: flex; gap: 8px; }
+.cart-container { display: grid; grid-template-columns: 1fr 320px; gap: 20px; height: 100%; }
+.cart-list { overflow-y: auto; }
+.cart-sidebar { background: #1a1a1a; border: 0.5px solid #333; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; }
+.cart-item { background: #252525; border: 0.5px solid #333; border-radius: 8px; padding: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+.cart-item-info { flex: 1; }
+.cart-item-name { font-size: 12px; color: #fff; font-weight: 500; }
+.cart-item-price { font-size: 13px; color: #10b981; font-weight: 600; }
+.cart-summary { margin-top: auto; padding-top: 16px; border-top: 0.5px solid #333; }
+.summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; }
+.summary-total { border-top: 0.5px solid #333; padding-top: 10px; font-size: 18px; font-weight: 700; color: #3b82f6; display: flex; justify-content: space-between; }
+.receipt-view { background: #fff; color: #000; padding: 30px 20px; border-radius: 8px; font-family: 'Courier New', monospace; text-align: center; line-height: 1.6; }
+.receipt-header { border-bottom: 2px dashed #000; padding-bottom: 12px; margin-bottom: 12px; font-weight: bold; font-size: 14px; }
+.receipt-line { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; }
+.receipt-separator { border-bottom: 1px dashed #000; margin: 12px 0; }
+.receipt-amount { font-weight: bold; font-size: 14px; }
+.receipt-footer { border-top: 2px dashed #000; padding-top: 12px; margin-top: 12px; font-size: 11px; color: #666; }
+.modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); z-index: 1000; align-items: center; justify-content: center; }
+.modal.open { display: flex; }
+.modal-content { background: #1a1a1a; border: 0.5px solid #333; border-radius: 12px; padding: 24px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.modal-header h2 { font-size: 18px; font-weight: 600; }
+.modal-close { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
+.empty-state { text-align: center; padding: 40px 20px; color: #666; }
+.qty-input { width: 60px; padding: 6px 8px; background: #1a1a1a; border: 0.5px solid #333; border-radius: 4px; color: #fff; text-align: center; }
 @media (max-width: 768px) {
-  .sidebar {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100vh;
-    z-index: 100;
-    transform: translateX(-100%);
-    transition: transform 0.3s;
-  }
-
-  .sidebar.open {
-    transform: translateX(0);
-  }
-
-  .app-wrapper {
-    flex-direction: column;
-  }
-
-  .main-content {
-    width: 100%;
-  }
-
-  .menu-toggle {
-    display: block;
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 20px;
-    cursor: pointer;
-  }
-
-  .dashboard {
-    grid-template-columns: 1fr;
-    padding: 12px;
-  }
-
-  .form-section,
-  .jobs-section,
-  .summary-section,
-  .settings-section {
-    padding: 16px;
-  }
-
-  .summary-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .job-details {
-    grid-template-columns: 1fr;
-  }
+  .sidebar { position: absolute; left: 0; top: 0; height: 100vh; z-index: 100; transform: translateX(-100%); transition: transform 0.3s; }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { width: 100%; }
+  .menu-toggle { display: block; background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; }
+  .cart-container { grid-template-columns: 1fr; }
+  .cart-sidebar { order: 2; }
 }
-
 @media (min-width: 769px) {
-  .menu-toggle {
-    display: none;
-  }
+  .menu-toggle { display: none; }
+}
+@media print {
+  .sidebar, .app-header, .menu-toggle, .btn, .modal { display: none !important; }
+  .main-content { overflow: visible; }
+  .receipt-view { max-width: 100%; box-shadow: none; }
 }
 </style>
 </head>
 <body>
 
 <div class="app-wrapper">
-  <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h2>📱 Repair Profit</h2>
-      <div class="version">v2.0</div>
+      <h2>🏪 Repair POS</h2>
+      <div class="version">v1.0</div>
     </div>
-
+    <div class="mode-switcher">
+      <button class="mode-btn active" data-mode="repair">🔧 Repair</button>
+      <button class="mode-btn" data-mode="retail">🛒 Retail</button>
+    </div>
     <div class="sidebar-nav">
-      <div class="nav-item active" data-tab="dashboard">
-        <span class="nav-icon">📊</span>
-        <span>Dashboard</span>
-      </div>
-      <div class="nav-item" data-tab="form">
-        <span class="nav-icon">➕</span>
-        <span>Add Job</span>
-      </div>
-      <div class="nav-item" data-tab="jobs">
-        <span class="nav-icon">📋</span>
-        <span>Jobs</span>
-      </div>
-      <div class="nav-item" data-tab="summary">
-        <span class="nav-icon">💹</span>
-        <span>Summary</span>
-      </div>
-      <div class="nav-item" data-tab="settings">
-        <span class="nav-icon">⚙️</span>
-        <span>Settings</span>
-      </div>
-    </div>
-
-    <div class="sidebar-footer">
-      © 2024 Repair Profit<br>
-      <span id="syncStatusMini" class="sync-status" style="display: block; margin-top: 8px;">●</span>
+      <!-- Repair Mode -->
+      <div class="nav-item active" data-tab="repair-pos" data-mode="repair"><span>🧾</span> POS</div>
+      <div class="nav-item" data-tab="repair-history" data-mode="repair"><span>📋</span> History</div>
+      <div class="nav-item" data-tab="repair-customers" data-mode="repair"><span>👥</span> Customers</div>
+      <!-- Retail Mode -->
+      <div class="nav-item" data-tab="retail-pos" data-mode="retail"><span>🛍️</span> Counter</div>
+      <div class="nav-item" data-tab="inventory" data-mode="retail"><span>📦</span> Inventory</div>
+      <div class="nav-item" data-tab="retail-history" data-mode="retail"><span>📊</span> Sales</div>
+      <!-- Shared -->
+      <div class="nav-item" data-tab="settings" data-mode="shared"><span>⚙️</span> Settings</div>
     </div>
   </div>
 
-  <!-- MAIN CONTENT -->
   <div class="main-content">
-    <!-- HEADER -->
     <div class="app-header">
-      <h1 id="sectionTitle">Dashboard</h1>
+      <h1 id="sectionTitle">🧾 POS</h1>
       <button class="menu-toggle" id="menuToggle">☰</button>
-      <div id="syncStatus" class="sync-status">✅ Ready</div>
     </div>
 
-    <!-- DASHBOARD VIEW -->
-    <div class="form-section active" id="dashboard">
-      <div class="dashboard">
-        <div class="stat-card income">
-          <div class="stat-label">ទទួលបាន / Income</div>
-          <div class="stat-value" id="totalIncome">$0.00</div>
-        </div>
-        <div class="stat-card cost">
-          <div class="stat-label">ដេីមទុន / Capital</div>
-          <div class="stat-value" id="totalCost">$0.00</div>
-        </div>
-        <div class="stat-card profit">
-          <div class="stat-label">ចំណេញ / Earnings</div>
-          <div class="stat-value" id="totalProfit">$0.00</div>
-        </div>
-      </div>
+    <!-- ============ REPAIR MODE ============ -->
 
-      <div style="padding: 24px;">
-        <h2 style="font-size: 16px; margin-bottom: 16px;">📊 Summary by Currency</h2>
-        
-        <div class="summary-grid">
-          <div class="summary-box">
-            <div class="summary-title">USD $</div>
-            <div class="summary-row">
-              <span class="summary-label">Income</span>
-              <span class="summary-amount income" id="sumIncomeUSD">$0.00</span>
-            </div>
-            <div class="summary-row">
-              <span class="summary-label">Capital</span>
-              <span class="summary-amount cost" id="sumCostUSD">$0.00</span>
-            </div>
-            <div class="summary-row">
-              <span class="summary-label">Profit</span>
-              <span class="summary-amount profit" id="sumProfitUSD">$0.00</span>
+    <!-- REPAIR POS -->
+    <div class="content-section active" id="repair-pos">
+      <h2>🧾 Repair Invoice</h2>
+      <div style="display: grid; grid-template-columns: 1fr 320px; gap: 20px;">
+        <div>
+          <div class="form-group"><label>Customer</label>
+            <select id="repairCustomer">
+              <option value="">+ New Customer</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Phone</label><input type="tel" id="repairPhone"></div>
+          <div class="form-group"><label>Description</label><input type="text" id="repairDesc" placeholder="e.g., Screen repair"></div>
+          <div class="form-group"><label>Service Category</label>
+            <select id="repairCategory">
+              <option value="screen">📱 Screen</option>
+              <option value="battery">🔋 Battery</option>
+              <option value="charging">⚡ Charging</option>
+              <option value="other">🔧 Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Service Price</label>
+            <div class="input-row">
+              <input type="number" id="repairPrice" step="0.01">
+              <select id="repairCurrency"><option value="usd">USD</option><option value="khr">KHR</option></select>
             </div>
           </div>
-
-          <div class="summary-box">
-            <div class="summary-title">KHR ៛</div>
-            <div class="summary-row">
-              <span class="summary-label">Income</span>
-              <span class="summary-amount income" id="sumIncomeKHR">៛0</span>
-            </div>
-            <div class="summary-row">
-              <span class="summary-label">Capital</span>
-              <span class="summary-amount cost" id="sumCostKHR">៛0</span>
-            </div>
-            <div class="summary-row">
-              <span class="summary-label">Profit</span>
-              <span class="summary-amount profit" id="sumProfitKHR">៛0</span>
+          <div class="form-group">
+            <label>Capital (Cost)</label>
+            <div class="input-row">
+              <input type="number" id="repairCost" value="0" step="0.01">
+              <select id="repairCostCurrency"><option value="usd">USD</option><option value="khr">KHR</option></select>
             </div>
           </div>
+          <div class="form-group"><label>Status</label>
+            <select id="repairStatus">
+              <option value="completed">✅ Completed</option>
+              <option value="pending">⏳ Pending</option>
+              <option value="in-progress">🔧 In Progress</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Payment</label>
+            <select id="repairPayment">
+              <option value="cash">💵 Cash</option>
+              <option value="pending">⏳ Pending</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" id="saveRepairBtn" style="width: 100%; margin-top: 12px;">✅ Complete</button>
         </div>
-      </div>
-    </div>
-
-    <!-- ADD JOB FORM -->
-    <div class="form-section" id="form">
-      <h2 id="formTitle">➕ Add New Job</h2>
-      
-      <div class="form-group">
-        <label>Customer Name / ឈ្មោះលូកក្រុម (Optional)</label>
-        <input type="text" id="customerName" placeholder="e.g., Sokha">
-      </div>
-
-      <div class="form-group">
-        <label>Phone / ទូរស័ព្ទ (Optional)</label>
-        <input type="tel" id="customerPhone" placeholder="e.g., +855 12 345 678">
-      </div>
-
-      <div class="form-group">
-        <label>Description / ពិពណ៌នា</label>
-        <input type="text" id="jobDesc" placeholder="e.g., iPhone 13 Screen Repair">
-      </div>
-
-      <div class="form-group">
-        <label>Income Amount / ចំនួនលុយដែលទទួលបាន</label>
-        <div class="input-row">
-          <input type="number" id="income" placeholder="Enter amount" step="0.01">
-          <select id="incomeCurrency">
-            <option value="usd">USD $</option>
-            <option value="khr">KHR ៛</option>
-          </select>
+        <div class="cart-sidebar">
+          <div style="font-size: 14px; font-weight: 600; margin-bottom: 12px;">📊 Preview</div>
+          <div class="summary-row"><span>Service:</span><span id="repairPreviewPrice">$0</span></div>
+          <div class="summary-row"><span>Cost:</span><span id="repairPreviewCost">$0</span></div>
+          <div class="receipt-separator"></div>
+          <div class="summary-total"><span>Profit:</span><span id="repairPreviewProfit">$0</span></div>
+          <div style="margin-top: 16px; padding-top: 16px; border-top: 0.5px solid #333;">
+            <button class="btn btn-success" id="printRepairBtn" style="width: 100%; margin-bottom: 8px;">🖨️ Print</button>
+            <button class="btn btn-secondary" id="resetRepairBtn" style="width: 100%;">Clear</button>
+          </div>
         </div>
-      </div>
-
-      <div class="form-group">
-        <label>Capital / ដេីមទុន (Parts Cost)</label>
-        <div class="input-row">
-          <input type="number" id="cost" placeholder="0" value="0" step="0.01">
-          <select id="costCurrency">
-            <option value="usd">USD $</option>
-            <option value="khr">KHR ៛</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Status / សភាវะ</label>
-        <select id="jobStatus">
-          <option value="completed">✅ Completed</option>
-          <option value="pending">⏳ Pending</option>
-          <option value="on-hold">🛑 On Hold</option>
-          <option value="in-progress">🔧 In Progress</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Date / ថ្ងៃ</label>
-        <input type="date" id="date">
-      </div>
-
-      <div class="form-group">
-        <label>Notes / ចំណាត់ការ (Optional)</label>
-        <textarea id="jobNotes" placeholder="Additional details..."></textarea>
-      </div>
-
-      <div class="preview-box">
-        <div class="preview-label">Estimated Profit / ចំណេញដែលបង្កើត</div>
-        <div class="preview-value" id="previewProfit">$0.00</div>
-      </div>
-
-      <div class="form-buttons">
-        <button class="btn btn-primary" id="addBtn">➕ Add Job</button>
-        <button class="btn btn-secondary" id="resetFormBtn">🔄 Clear</button>
       </div>
     </div>
 
-    <!-- JOBS LIST -->
-    <div class="jobs-section" id="jobs">
-      <h2>📋 Jobs</h2>
-      
-      <div class="search-box">
-        <input type="text" id="searchBox" placeholder="🔍 Search by name, phone, description...">
-      </div>
-
-      <div id="jobList"></div>
+    <!-- REPAIR HISTORY -->
+    <div class="content-section" id="repair-history">
+      <h2>📋 Repair History</h2>
+      <div style="margin-bottom: 16px;"><input type="text" id="repairSearchBox" placeholder="🔍 Search..." style="width: 100%; padding: 12px; background: #1a1a1a; border: 0.5px solid #333; border-radius: 8px; color: #fff;"></div>
+      <div id="repairHistoryList"></div>
     </div>
 
-    <!-- SUMMARY -->
-    <div class="summary-section" id="summary">
-      <h2>💹 Financial Summary</h2>
-      
-      <div class="summary-grid">
-        <div class="summary-box">
-          <div class="summary-title">USD $</div>
-          <div class="summary-row">
-            <span class="summary-label">Total Income</span>
-            <span class="summary-amount income" id="summaryIncomeUSD">$0.00</span>
-          </div>
-          <div class="summary-row">
-            <span class="summary-label">Total Capital</span>
-            <span class="summary-amount cost" id="summaryCostUSD">$0.00</span>
-          </div>
-          <div class="summary-row">
-            <span class="summary-label">Total Profit</span>
-            <span class="summary-amount profit" id="summaryProfitUSD">$0.00</span>
-          </div>
-        </div>
+    <!-- REPAIR CUSTOMERS -->
+    <div class="content-section" id="repair-customers">
+      <h2>👥 Customers</h2>
+      <div id="repairCustomerList"></div>
+    </div>
 
-        <div class="summary-box">
-          <div class="summary-title">KHR ៛</div>
-          <div class="summary-row">
-            <span class="summary-label">Total Income</span>
-            <span class="summary-amount income" id="summaryIncomeKHR">៛0</span>
-          </div>
-          <div class="summary-row">
-            <span class="summary-label">Total Capital</span>
-            <span class="summary-amount cost" id="summaryCostKHR">៛0</span>
-          </div>
-          <div class="summary-row">
-            <span class="summary-label">Total Profit</span>
-            <span class="summary-amount profit" id="summaryProfitKHR">៛0</span>
+    <!-- ============ RETAIL MODE ============ -->
+
+    <!-- RETAIL POS -->
+    <div class="content-section" id="retail-pos">
+      <h2>🛍️ Point of Sale</h2>
+      <div style="display: grid; grid-template-columns: 1fr 320px; gap: 20px; height: 100%;">
+        <div>
+          <div class="form-group" style="margin-bottom: 12px;"><input type="text" id="retailSearch" placeholder="🔍 Search products..." style="width: 100%; padding: 12px; background: #1a1a1a; border: 0.5px solid #333; border-radius: 8px; color: #fff;"></div>
+          <div id="productGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; max-height: 400px; overflow-y: auto;"></div>
+        </div>
+        <div class="cart-sidebar">
+          <div style="font-size: 14px; font-weight: 600; margin-bottom: 12px;">🛒 Cart</div>
+          <div id="cartItemsList" style="flex: 1; overflow-y: auto;"></div>
+          <div class="summary-row"><span>Items:</span><span id="cartCount">0</span></div>
+          <div class="summary-row"><span>Subtotal:</span><span id="cartSubtotal">$0</span></div>
+          <div class="receipt-separator"></div>
+          <div class="summary-total"><span>Total:</span><span id="cartTotal">$0</span></div>
+          <div style="margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <button class="btn btn-danger" id="clearCartBtn">Clear</button>
+            <button class="btn btn-primary" id="checkoutBtn">Checkout</button>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- INVENTORY -->
+    <div class="content-section" id="inventory">
+      <h2>📦 Inventory</h2>
+      <button class="btn btn-success" id="addProductBtn" style="margin-bottom: 16px;">➕ Add Product</button>
+      <div id="inventoryList"></div>
+    </div>
+
+    <!-- RETAIL HISTORY -->
+    <div class="content-section" id="retail-history">
+      <h2>📊 Sales History</h2>
+      <div style="margin-bottom: 16px;"><input type="text" id="retailSearchBox" placeholder="🔍 Search..." style="width: 100%; padding: 12px; background: #1a1a1a; border: 0.5px solid #333; border-radius: 8px; color: #fff;"></div>
+      <div id="retailHistoryList"></div>
     </div>
 
     <!-- SETTINGS -->
-    <div class="settings-section" id="settings">
+    <div class="content-section" id="settings">
       <h2>⚙️ Settings</h2>
-      
-      <div class="settings-box">
-        <h3>💱 Exchange Rate</h3>
-        <div class="form-group">
-          <label>1 USD = ? KHR</label>
-          <input type="number" id="exchangeRate" placeholder="4100" step="1" min="1">
-        </div>
-        <button class="btn btn-primary" id="saveExchangeBtn" style="width: 100%;">💾 Save Exchange Rate</button>
+      <div style="background: #1a1a1a; border: 0.5px solid #333; border-radius: 8px; padding: 20px; margin-bottom: 16px;">
+        <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 12px;">💱 Exchange Rate</h3>
+        <div class="form-group"><label>1 USD = ? KHR</label><input type="number" id="exchangeRate" step="1"></div>
+        <button class="btn btn-primary" id="saveExchangeBtn" style="width: 100%;">Save</button>
       </div>
-
-      <div class="settings-box">
-        <h3>🗑️ Danger Zone</h3>
-        <button class="btn btn-danger" id="clearAllBtn" style="width: 100%;">Delete All Jobs</button>
+      <div style="background: #1a1a1a; border: 0.5px solid #333; border-radius: 8px; padding: 20px;">
+        <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 12px;">🧾 Business Info</h3>
+        <div class="form-group"><label>Business Name</label><input type="text" id="businessName"></div>
+        <div class="form-group"><label>Address</label><input type="text" id="businessAddress"></div>
+        <div class="form-group"><label>Phone</label><input type="tel" id="businessPhone"></div>
+        <div class="form-group"><label>Owner</label><input type="text" id="ownerName"></div>
+        <button class="btn btn-success" id="saveBusinessBtn" style="width: 100%;">Save</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- EDIT JOB MODAL -->
-<div class="modal" id="editModal">
+<!-- RECEIPT MODAL -->
+<div class="modal" id="receiptModal">
+  <div class="modal-content" style="max-width: 450px;">
+    <div class="modal-header"><h2>🧾 Receipt</h2><button class="modal-close" onclick="closeReceiptModal()">✕</button></div>
+    <div id="receiptContent"></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;"><button class="btn btn-primary" onclick="printReceipt()">🖨️ Print</button><button class="btn btn-secondary" onclick="closeReceiptModal()">Close</button></div>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal" id="productModal">
   <div class="modal-content">
-    <div class="modal-header">
-      <h2>✏️ Edit Job</h2>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-
-    <div class="form-group">
-      <label>Customer Name</label>
-      <input type="text" id="editCustomerName" placeholder="Customer name">
-    </div>
-
-    <div class="form-group">
-      <label>Phone</label>
-      <input type="tel" id="editCustomerPhone" placeholder="Phone number">
-    </div>
-
-    <div class="form-group">
-      <label>Description</label>
-      <input type="text" id="editJobDesc" placeholder="Description">
-    </div>
-
-    <div class="form-group">
-      <label>Income Amount</label>
-      <div class="input-row">
-        <input type="number" id="editIncome" placeholder="Amount" step="0.01">
-        <select id="editIncomeCurrency">
-          <option value="usd">USD $</option>
-          <option value="khr">KHR ៛</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label>Capital</label>
-      <div class="input-row">
-        <input type="number" id="editCost" placeholder="0" step="0.01">
-        <select id="editCostCurrency">
-          <option value="usd">USD $</option>
-          <option value="khr">KHR ៛</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label>Status</label>
-      <select id="editJobStatus">
-        <option value="completed">✅ Completed</option>
-        <option value="pending">⏳ Pending</option>
-        <option value="on-hold">🛑 On Hold</option>
-        <option value="in-progress">🔧 In Progress</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>Date</label>
-      <input type="date" id="editDate">
-    </div>
-
-    <div class="form-group">
-      <label>Notes</label>
-      <textarea id="editJobNotes" placeholder="Notes..."></textarea>
-    </div>
-
-    <div class="form-buttons">
-      <button class="btn btn-primary" id="saveEditBtn">💾 Save Changes</button>
-      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-    </div>
+    <div class="modal-header"><h2 id="productModalTitle">➕ Add Product</h2><button class="modal-close" onclick="closeProductModal()">✕</button></div>
+    <div class="form-group"><label>Product Name</label><input type="text" id="productName"></div>
+    <div class="form-group"><label>SKU</label><input type="text" id="productSKU" placeholder="e.g., LCD-GLASS-01"></div>
+    <div class="form-group"><label>Price</label><div class="input-row"><input type="number" id="productPrice" step="0.01"><select id="productCurrency"><option value="usd">USD</option><option value="khr">KHR</option></select></div></div>
+    <div class="form-group"><label>Quantity</label><input type="number" id="productQty" value="1" step="1"></div>
+    <div class="form-group"><label>Category</label><input type="text" id="productCategory" placeholder="e.g., Parts"></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;"><button class="btn btn-primary" id="saveProductBtn">Save</button><button class="btn btn-secondary" onclick="closeProductModal()">Cancel</button></div>
   </div>
 </div>
-
-<!-- FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js"></script>
 
 <script>
-const APP_VERSION = '2.0';
+const APP_VERSION = '1.0';
+let currentMode = 'repair';
+let USD_TO_KHR = parseInt(localStorage.getItem('exchangeRate') || '4100');
+let businessConfig = JSON.parse(localStorage.getItem('businessConfig') || '{}');
+let repairJobs = JSON.parse(localStorage.getItem('repairJobs') || '[]');
+let retailTransactions = JSON.parse(localStorage.getItem('retailTransactions') || '[]');
+let products = JSON.parse(localStorage.getItem('products') || '[]');
+let customers = JSON.parse(localStorage.getItem('customers') || '[]');
+let cart = [];
+let editingProductIndex = -1;
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAjo9tpTz3yIM9_hbKdOBL0sEaxK7vucEM",
-  authDomain: "repair-profit.firebaseapp.com",
-  projectId: "repair-profit",
-  storageBucket: "repair-profit.firebasestorage.app",
-  messagingSenderId: "565805773489",
-  appId: "1:565805773489:web:8161b557a60e6ac0ac6890",
-  measurementId: "G-T93MWYTDFD"
-};
+// Initialize
+document.getElementById('exchangeRate').value = USD_TO_KHR;
+document.getElementById('businessName').value = businessConfig.businessName || '';
+document.getElementById('businessAddress').value = businessConfig.businessAddress || '';
+document.getElementById('businessPhone').value = businessConfig.businessPhone || '';
+document.getElementById('ownerName').value = businessConfig.ownerName || '';
 
-let db = null;
-try {
-  const app = firebase.initializeApp(firebaseConfig);
-  db = firebase.firestore(app);
-} catch (err) {
-  console.error('Firebase init error:', err);
+// Mode Switcher
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    currentMode = e.target.dataset.mode;
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    updateNavigation();
+    switchTab('repair-pos');
+  });
+});
+
+function updateNavigation() {
+  document.querySelectorAll('.nav-item').forEach(item => {
+    const mode = item.dataset.mode;
+    if (mode === currentMode || mode === 'shared') {
+      item.style.display = 'flex';
+    } else {
+      item.style.display = 'none';
+    }
+  });
 }
 
-let jobs = JSON.parse(localStorage.getItem('repairJobs') || '[]');
-let USD_TO_KHR = parseInt(localStorage.getItem('exchangeRate') || '4100');
-let isOnline = navigator.onLine;
-let syncTimeout;
-let editingIndex = -1;
-
-document.getElementById('date').valueAsDate = new Date();
-document.getElementById('exchangeRate').value = USD_TO_KHR;
-
-// Sidebar Navigation
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', (e) => {
     const tabName = item.dataset.tab;
@@ -1079,446 +328,533 @@ document.querySelectorAll('.nav-item').forEach(item => {
 function switchTab(tabName) {
   document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
   document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-
-  document.querySelectorAll('.form-section, .jobs-section, .summary-section, .settings-section').forEach(section => {
-    section.classList.remove('active');
-  });
-  document.getElementById(tabName === 'dashboard' ? 'dashboard' : tabName).classList.add('active');
-
+  document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+  document.getElementById(tabName).classList.add('active');
+  
   const titles = {
-    dashboard: '📊 Dashboard',
-    form: '➕ Add Job',
-    jobs: '📋 Jobs',
-    summary: '💹 Summary',
-    settings: '⚙️ Settings'
+    'repair-pos': '🧾 Repair Invoice',
+    'repair-history': '📋 Repair History',
+    'repair-customers': '👥 Customers',
+    'retail-pos': '🛍️ Point of Sale',
+    'inventory': '📦 Inventory',
+    'retail-history': '📊 Sales History',
+    'settings': '⚙️ Settings'
   };
   document.getElementById('sectionTitle').textContent = titles[tabName];
+  
+  if (tabName === 'retail-pos') renderProducts();
+  if (tabName === 'inventory') renderInventory();
+  if (tabName === 'repair-history') renderRepairHistory();
+  if (tabName === 'retail-history') renderRetailHistory();
+  if (tabName === 'repair-customers') renderRepairCustomers();
 }
 
 document.getElementById('menuToggle').addEventListener('click', () => {
   document.getElementById('sidebar').classList.toggle('open');
 });
 
-document.addEventListener('click', (e) => {
-  const sidebar = document.getElementById('sidebar');
-  const toggle = document.getElementById('menuToggle');
-  if (!sidebar.contains(e.target) && !toggle.contains(e.target) && sidebar.classList.contains('open')) {
-    sidebar.classList.remove('open');
-  }
-});
-
-window.addEventListener('online', () => {
-  isOnline = true;
-  updateSyncStatus('✅ Connected');
-  syncToFirebase();
-});
-
-window.addEventListener('offline', () => {
-  isOnline = false;
-  updateSyncStatus('⚠️ Offline');
-});
-
+// HELPERS
 function formatCurrency(amount, currency) {
   if (currency === 'khr') {
     const khr = Math.round(amount * USD_TO_KHR);
     return khr.toLocaleString() + ' ៛';
   }
-  const formatted = amount.toFixed(2);
-  return '$' + formatted.toLocaleString();
-}
-
-function formatDate(dateStr) {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  return '$' + amount.toFixed(2);
 }
 
 function convertToUSD(amount, currency) {
-  if (currency === 'khr') {
-    return Math.round(amount / USD_TO_KHR * 100) / 100;
-  }
+  if (currency === 'khr') return Math.round(amount / USD_TO_KHR * 100) / 100;
   return amount;
 }
 
-function updateDashboard() {
-  const totalIncome = jobs.reduce((sum, job) => sum + job.income, 0);
-  const totalCost = jobs.reduce((sum, job) => sum + job.cost, 0);
-  const totalProfit = totalIncome - totalCost;
+// ============ REPAIR MODE ============
 
-  document.getElementById('totalIncome').textContent = formatCurrency(totalIncome, 'usd');
-  document.getElementById('totalCost').textContent = formatCurrency(totalCost, 'usd');
-  
-  const profitEl = document.getElementById('totalProfit');
-  profitEl.textContent = formatCurrency(totalProfit, 'usd');
-  profitEl.style.color = totalProfit >= 0 ? '#3b82f6' : '#ef4444';
-
-  document.getElementById('sumIncomeUSD').textContent = formatCurrency(totalIncome, 'usd');
-  document.getElementById('sumCostUSD').textContent = formatCurrency(totalCost, 'usd');
-  document.getElementById('sumProfitUSD').textContent = formatCurrency(totalProfit, 'usd');
-
-  document.getElementById('sumIncomeKHR').textContent = formatCurrency(totalIncome, 'khr');
-  document.getElementById('sumCostKHR').textContent = formatCurrency(totalCost, 'khr');
-  document.getElementById('sumProfitKHR').textContent = formatCurrency(totalProfit, 'khr');
-
-  document.getElementById('summaryIncomeUSD').textContent = formatCurrency(totalIncome, 'usd');
-  document.getElementById('summaryCostUSD').textContent = formatCurrency(totalCost, 'usd');
-  document.getElementById('summaryProfitUSD').textContent = formatCurrency(totalProfit, 'usd');
-
-  document.getElementById('summaryIncomeKHR').textContent = formatCurrency(totalIncome, 'khr');
-  document.getElementById('summaryCostKHR').textContent = formatCurrency(totalCost, 'khr');
-  document.getElementById('summaryProfitKHR').textContent = formatCurrency(totalProfit, 'khr');
+function populateCustomerDropdown() {
+  const select = document.getElementById('repairCustomer');
+  select.innerHTML = '<option value="">+ New Customer</option>' +
+    customers.map((c, i) => `<option value="${i}">${c.name} (${c.phone})</option>`).join('');
 }
 
-function updatePreview() {
-  const incomeAmount = parseFloat(document.getElementById('income').value) || 0;
-  const costAmount = parseFloat(document.getElementById('cost').value) || 0;
-  const incomeCurrency = document.getElementById('incomeCurrency').value;
-  const costCurrency = document.getElementById('costCurrency').value;
-
-  const income = convertToUSD(incomeAmount, incomeCurrency);
-  const cost = convertToUSD(costAmount, costCurrency);
-  const profit = income - cost;
-
-  document.getElementById('previewProfit').textContent = formatCurrency(profit, 'usd');
-  document.getElementById('previewProfit').style.color = profit >= 0 ? '#3b82f6' : '#ef4444';
-}
-
-function formatJobDisplay(amount, currency) {
-  if (currency === 'khr') {
-    return Math.round(amount).toLocaleString() + ' ៛';
+document.getElementById('repairCustomer').addEventListener('change', (e) => {
+  if (e.target.value) {
+    const cust = customers[e.target.value];
+    document.getElementById('repairPhone').value = cust.phone;
+  } else {
+    document.getElementById('repairPhone').value = '';
   }
-  return '$' + amount.toFixed(2).toLocaleString();
+});
+
+function updateRepairPreview() {
+  const price = parseFloat(document.getElementById('repairPrice').value) || 0;
+  const cost = parseFloat(document.getElementById('repairCost').value) || 0;
+  const priceUSD = convertToUSD(price, document.getElementById('repairCurrency').value);
+  const costUSD = convertToUSD(cost, document.getElementById('repairCostCurrency').value);
+  const profit = priceUSD - costUSD;
+  document.getElementById('repairPreviewPrice').textContent = formatCurrency(priceUSD, 'usd');
+  document.getElementById('repairPreviewCost').textContent = formatCurrency(costUSD, 'usd');
+  document.getElementById('repairPreviewProfit').textContent = formatCurrency(profit, 'usd');
+  document.getElementById('repairPreviewProfit').style.color = profit >= 0 ? '#3b82f6' : '#ef4444';
 }
 
-function renderJobs() {
-  const list = document.getElementById('jobList');
+document.getElementById('repairPrice').addEventListener('input', updateRepairPreview);
+document.getElementById('repairCost').addEventListener('input', updateRepairPreview);
+document.getElementById('repairCurrency').addEventListener('change', updateRepairPreview);
+document.getElementById('repairCostCurrency').addEventListener('change', updateRepairPreview);
+
+document.getElementById('saveRepairBtn').addEventListener('click', () => {
+  const price = parseFloat(document.getElementById('repairPrice').value);
+  if (!price || price <= 0) { alert('Enter price'); return; }
+
+  const name = document.getElementById('repairCustomer').value ? 
+    customers[document.getElementById('repairCustomer').value].name : 
+    ('New Customer - ' + new Date().toLocaleTimeString());
+  const phone = document.getElementById('repairPhone').value;
+  if (phone && !customers.find(c => c.phone === phone)) {
+    customers.push({ name: name || 'Unknown', phone });
+    localStorage.setItem('customers', JSON.stringify(customers));
+    populateCustomerDropdown();
+  }
+
+  const priceUSD = convertToUSD(price, document.getElementById('repairCurrency').value);
+  const costUSD = convertToUSD(parseFloat(document.getElementById('repairCost').value) || 0, document.getElementById('repairCostCurrency').value);
+
+  const job = {
+    id: Date.now(),
+    customerName: name,
+    customerPhone: phone,
+    description: document.getElementById('repairDesc').value,
+    category: document.getElementById('repairCategory').value,
+    price: priceUSD,
+    cost: costUSD,
+    status: document.getElementById('repairStatus').value,
+    payment: document.getElementById('repairPayment').value,
+    date: new Date().toISOString().split('T')[0],
+    timestamp: new Date().toISOString()
+  };
+
+  repairJobs.push(job);
+  localStorage.setItem('repairJobs', JSON.stringify(repairJobs));
   
-  if (jobs.length === 0) {
-    list.innerHTML = '<div class="empty-state"><p>មិនមានការងារនៅឡើយទេ / No jobs yet</p></div>';
+  showRepairReceipt(job);
+  document.getElementById('repairDesc').value = '';
+  document.getElementById('repairPrice').value = '';
+  document.getElementById('repairCost').value = '0';
+  document.getElementById('repairCustomer').value = '';
+  document.getElementById('repairPhone').value = '';
+  updateRepairPreview();
+});
+
+function showRepairReceipt(job) {
+  const receiptHTML = `
+    <div class="receipt-view">
+      <div class="receipt-header">${businessConfig.businessName || 'REPAIR SHOP'}<br>🧾 RECEIPT</div>
+      ${businessConfig.businessAddress ? `<div style="font-size: 10px; margin-bottom: 6px;">${businessConfig.businessAddress}</div>` : ''}
+      ${businessConfig.businessPhone ? `<div style="font-size: 10px; margin-bottom: 6px;">${businessConfig.businessPhone}</div>` : ''}
+      <div class="receipt-separator"></div>
+      <div class="receipt-line" style="justify-content: flex-start;"><span>Customer: ${job.customerName}</span></div>
+      ${job.customerPhone ? `<div class="receipt-line" style="justify-content: flex-start;"><span>📱 ${job.customerPhone}</span></div>` : ''}
+      <div class="receipt-line" style="justify-content: flex-start;"><span>Date: ${job.date}</span></div>
+      <div class="receipt-separator"></div>
+      <div style="text-align: left; margin: 12px 0; font-size: 12px;"><strong>${job.description}</strong></div>
+      <div class="receipt-separator"></div>
+      <div class="receipt-line"><span>Service:</span><span>${formatCurrency(job.price, 'usd')}</span></div>
+      <div class="receipt-line" style="display: none;"><span>Cost:</span><span>${formatCurrency(job.cost, 'usd')}</span></div>
+      <div class="receipt-separator"></div>
+      <div class="receipt-line" style="justify-content: center; margin: 12px 0;"><span class="receipt-amount">${formatCurrency(job.price, 'usd')}</span></div>
+      <div class="receipt-separator"></div>
+      <div style="font-size: 11px; margin: 12px 0;">Status: ${job.status}</div>
+      <div class="receipt-footer">${businessConfig.ownerName || ''}</div>
+    </div>
+  `;
+  document.getElementById('receiptContent').innerHTML = receiptHTML;
+  document.getElementById('receiptModal').classList.add('open');
+}
+
+function closeReceiptModal() {
+  document.getElementById('receiptModal').classList.remove('open');
+}
+
+function printReceipt() {
+  window.print();
+}
+
+document.getElementById('printRepairBtn').addEventListener('click', () => {
+  const price = parseFloat(document.getElementById('repairPrice').value);
+  if (!price) { alert('Enter price first'); return; }
+  const priceUSD = convertToUSD(price, document.getElementById('repairCurrency').value);
+  const costUSD = convertToUSD(parseFloat(document.getElementById('repairCost').value) || 0, document.getElementById('repairCostCurrency').value);
+  showRepairReceipt({
+    customerName: document.getElementById('repairCustomer').value ? customers[document.getElementById('repairCustomer').value].name : 'Customer',
+    customerPhone: document.getElementById('repairPhone').value,
+    description: document.getElementById('repairDesc').value,
+    price: priceUSD,
+    cost: costUSD,
+    date: new Date().toISOString().split('T')[0]
+  });
+});
+
+document.getElementById('resetRepairBtn').addEventListener('click', () => {
+  document.getElementById('repairDesc').value = '';
+  document.getElementById('repairPrice').value = '';
+  document.getElementById('repairCost').value = '0';
+  document.getElementById('repairCustomer').value = '';
+  document.getElementById('repairPhone').value = '';
+  updateRepairPreview();
+});
+
+function renderRepairHistory() {
+  const list = document.getElementById('repairHistoryList');
+  if (repairJobs.length === 0) {
+    list.innerHTML = '<div class="empty-state">No repair jobs yet</div>';
     return;
   }
-
-  const sorted = [...jobs].sort((a, b) => new Date(b.date) - new Date(a.date));
-  
-  list.innerHTML = sorted.map((job, idx) => {
-    const profit = job.income - job.cost;
-    const incomeDisplay = job.incomeAmount ? `${formatJobDisplay(job.incomeAmount, job.incomeCurrency)}` : formatCurrency(job.income, 'usd');
-    const costDisplay = job.costAmount ? `${formatJobDisplay(job.costAmount, job.costCurrency)}` : formatCurrency(job.cost, 'usd');
-    const phoneHtml = job.customerPhone ? `<a href="tel:${job.customerPhone}" class="job-phone">📱 ${job.customerPhone}</a>` : '';
-    const statusEmoji = {
-      'completed': '✅',
-      'pending': '⏳',
-      'on-hold': '🛑',
-      'in-progress': '🔧'
-    };
-    const originalIndex = jobs.indexOf(job);
-    
+  list.innerHTML = repairJobs.reverse().map((job, i) => {
+    const profit = job.price - job.cost;
     return `
-      <div class="job-item">
-        <div class="job-header">
-          <div class="job-customer">
-            ${job.customerName ? `<div class="job-name">${job.customerName}</div>` : ''}
-            ${phoneHtml}
-          </div>
-          <span class="job-status ${job.status || 'completed'}">${statusEmoji[job.status || 'completed']} ${(job.status || 'completed').toUpperCase()}</span>
+      <div class="item-card">
+        <div class="item-info">
+          <div class="item-name">${job.customerName}</div>
+          <div style="font-size: 12px; color: #888;">${job.date} • ${job.description}</div>
+          <div style="font-size: 13px; color: #10b981; margin-top: 4px;">${formatCurrency(job.price, 'usd')} (Profit: ${formatCurrency(profit, 'usd')})</div>
         </div>
-        
-        <div class="job-details">
-          <div class="job-info">
-            <div class="job-desc">${job.description}</div>
-            <div class="job-meta">${formatDate(job.date)}</div>
-            ${job.notes ? `<div class="job-notes">📝 ${job.notes}</div>` : ''}
-          </div>
-          <div class="job-amount">
-            <div class="job-income">+${incomeDisplay}</div>
-            <div class="job-cost">-${costDisplay}</div>
-          </div>
-        </div>
-
-        <div class="job-actions">
-          <button class="btn btn-secondary btn-sm" onclick="editJob(${originalIndex})">✏️ Edit</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteJob(${originalIndex})">🗑️ Delete</button>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-danger btn-sm" onclick="deleteRepair(${repairJobs.length - 1 - i})">🗑️</button>
         </div>
       </div>
     `;
   }).join('');
 }
 
-function updateSyncStatus(status) {
-  document.getElementById('syncStatus').textContent = status;
-  document.getElementById('syncStatusMini').textContent = status;
-  
-  if (status.includes('✅')) {
-    document.getElementById('syncStatus').className = 'sync-status';
-  } else if (status.includes('⚠️')) {
-    document.getElementById('syncStatus').className = 'sync-status offline';
-  } else if (status.includes('Syncing')) {
-    document.getElementById('syncStatus').className = 'sync-status syncing';
+function deleteRepair(i) {
+  if (confirm('Delete?')) {
+    repairJobs.splice(i, 1);
+    localStorage.setItem('repairJobs', JSON.stringify(repairJobs));
+    renderRepairHistory();
   }
 }
 
-async function syncToFirebase() {
-  if (!db || !isOnline || jobs.length === 0) return;
-  
-  try {
-    clearTimeout(syncTimeout);
-    updateSyncStatus('Syncing...');
-    
-    const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Firebase sync timeout')), 5000)
-    );
-    
-    const docRef = db.collection('repair-profit').doc('jobs');
-    const savePromise = docRef.set({
-      jobs: jobs,
-      exchangeRate: USD_TO_KHR,
-      lastSync: new Date().toISOString()
-    });
-    
-    await Promise.race([savePromise, timeoutPromise]);
-    
-    updateSyncStatus('✅ Synced');
-    syncTimeout = setTimeout(syncToFirebase, 30000);
-  } catch (err) {
-    console.error('Sync error:', err);
-    updateSyncStatus('⚠️ Offline');
-    syncTimeout = setTimeout(syncToFirebase, 10000);
-  }
-}
-
-// ADD JOB
-document.getElementById('addBtn').addEventListener('click', () => {
-  const customerName = document.getElementById('customerName').value || '';
-  const customerPhone = document.getElementById('customerPhone').value || '';
-  const description = document.getElementById('jobDesc').value || 'Repair Job';
-  const incomeAmount = parseFloat(document.getElementById('income').value);
-  const costAmount = parseFloat(document.getElementById('cost').value) || 0;
-  const incomeCurrency = document.getElementById('incomeCurrency').value;
-  const costCurrency = document.getElementById('costCurrency').value;
-  const date = document.getElementById('date').value;
-  const status = document.getElementById('jobStatus').value;
-  const notes = document.getElementById('jobNotes').value || '';
-
-  if (!incomeAmount || incomeAmount <= 0) {
-    alert('សូមបញ្ចូលចំនួនលុយដែលទទួលបាន / Please enter income amount');
+function renderRepairCustomers() {
+  const list = document.getElementById('repairCustomerList');
+  if (customers.length === 0) {
+    list.innerHTML = '<div class="empty-state">No customers yet</div>';
     return;
   }
-
-  if (costAmount < 0) {
-    alert('ដេីមទុនមិនអាចជាលេខលបបានទេ / Capital cannot be negative');
-    return;
-  }
-
-  const income = convertToUSD(incomeAmount, incomeCurrency);
-  const cost = convertToUSD(costAmount, costCurrency);
-
-  const btn = document.getElementById('addBtn');
-  btn.disabled = true;
-  btn.textContent = '💾 Saving...';
-  
-  jobs.push({ 
-    customerName, customerPhone, description, income, cost, date, 
-    incomeAmount, costAmount, incomeCurrency, costCurrency, status, notes 
-  });
-  localStorage.setItem('repairJobs', JSON.stringify(jobs));
-  
-  document.getElementById('customerName').value = '';
-  document.getElementById('customerPhone').value = '';
-  document.getElementById('jobDesc').value = '';
-  document.getElementById('income').value = '';
-  document.getElementById('cost').value = '0';
-  document.getElementById('incomeCurrency').value = 'usd';
-  document.getElementById('costCurrency').value = 'usd';
-  document.getElementById('jobStatus').value = 'completed';
-  document.getElementById('jobNotes').value = '';
-  document.getElementById('date').valueAsDate = new Date();
-  updatePreview();
-  
-  updateDashboard();
-  renderJobs();
-  
-  setTimeout(() => {
-    syncToFirebase().finally(() => {
-      btn.disabled = false;
-      btn.textContent = '➕ Add Job';
-    });
-  }, 50);
-});
-
-// EDIT JOB
-function editJob(index) {
-  editingIndex = index;
-  const job = jobs[index];
-  
-  document.getElementById('editCustomerName').value = job.customerName || '';
-  document.getElementById('editCustomerPhone').value = job.customerPhone || '';
-  document.getElementById('editJobDesc').value = job.description || '';
-  document.getElementById('editIncome').value = job.incomeAmount || '';
-  document.getElementById('editIncomeCurrency').value = job.incomeCurrency || 'usd';
-  document.getElementById('editCost').value = job.costAmount || '';
-  document.getElementById('editCostCurrency').value = job.costCurrency || 'usd';
-  document.getElementById('editJobStatus').value = job.status || 'completed';
-  document.getElementById('editDate').value = job.date || '';
-  document.getElementById('editJobNotes').value = job.notes || '';
-  
-  document.getElementById('editModal').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('editModal').classList.remove('open');
-  editingIndex = -1;
-}
-
-document.getElementById('saveEditBtn').addEventListener('click', () => {
-  if (editingIndex === -1) return;
-
-  const job = jobs[editingIndex];
-  job.customerName = document.getElementById('editCustomerName').value || '';
-  job.customerPhone = document.getElementById('editCustomerPhone').value || '';
-  job.description = document.getElementById('editJobDesc').value || 'Repair Job';
-  job.incomeAmount = parseFloat(document.getElementById('editIncome').value);
-  job.costAmount = parseFloat(document.getElementById('editCost').value) || 0;
-  job.incomeCurrency = document.getElementById('editIncomeCurrency').value;
-  job.costCurrency = document.getElementById('editCostCurrency').value;
-  job.income = convertToUSD(job.incomeAmount, job.incomeCurrency);
-  job.cost = convertToUSD(job.costAmount, job.costCurrency);
-  job.status = document.getElementById('editJobStatus').value;
-  job.date = document.getElementById('editDate').value;
-  job.notes = document.getElementById('editJobNotes').value || '';
-
-  localStorage.setItem('repairJobs', JSON.stringify(jobs));
-  updateDashboard();
-  renderJobs();
-  syncToFirebase();
-  closeModal();
-});
-
-// DELETE JOB
-function deleteJob(index) {
-  if (confirm('ចាប់ផ្តើមលុប? / Delete this job?')) {
-    jobs.splice(index, 1);
-    localStorage.setItem('repairJobs', JSON.stringify(jobs));
-    updateDashboard();
-    renderJobs();
-    syncToFirebase();
-  }
-}
-
-// CLEAR FORM
-document.getElementById('resetFormBtn').addEventListener('click', () => {
-  document.getElementById('customerName').value = '';
-  document.getElementById('customerPhone').value = '';
-  document.getElementById('jobDesc').value = '';
-  document.getElementById('income').value = '';
-  document.getElementById('cost').value = '0';
-  document.getElementById('jobStatus').value = 'completed';
-  document.getElementById('jobNotes').value = '';
-  document.getElementById('date').valueAsDate = new Date();
-  updatePreview();
-});
-
-// SEARCH & FILTER
-document.getElementById('searchBox').addEventListener('input', (e) => {
-  const query = e.target.value.toLowerCase();
-  if (!query) {
-    renderJobs();
-    return;
-  }
-
-  const filtered = jobs.filter(job => 
-    (job.customerName && job.customerName.toLowerCase().includes(query)) ||
-    (job.customerPhone && job.customerPhone.toLowerCase().includes(query)) ||
-    job.description.toLowerCase().includes(query) ||
-    formatDate(job.date).toLowerCase().includes(query)
-  );
-
-  if (filtered.length === 0) {
-    document.getElementById('jobList').innerHTML = '<div class="empty-state"><p>No results found</p></div>';
-  } else {
-    const sorted = [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
-    const statusEmoji = {
-      'completed': '✅',
-      'pending': '⏳',
-      'on-hold': '🛑',
-      'in-progress': '🔧'
-    };
-    
-    document.getElementById('jobList').innerHTML = sorted.map((job) => {
-      const incomeDisplay = job.incomeAmount ? `${formatJobDisplay(job.incomeAmount, job.incomeCurrency)}` : formatCurrency(job.income, 'usd');
-      const costDisplay = job.costAmount ? `${formatJobDisplay(job.costAmount, job.costCurrency)}` : formatCurrency(job.cost, 'usd');
-      const phoneHtml = job.customerPhone ? `<a href="tel:${job.customerPhone}" class="job-phone">📱 ${job.customerPhone}</a>` : '';
-      const originalIndex = jobs.indexOf(job);
-      
-      return `
-        <div class="job-item">
-          <div class="job-header">
-            <div class="job-customer">
-              ${job.customerName ? `<div class="job-name">${job.customerName}</div>` : ''}
-              ${phoneHtml}
-            </div>
-            <span class="job-status ${job.status || 'completed'}">${statusEmoji[job.status || 'completed']} ${(job.status || 'completed').toUpperCase()}</span>
-          </div>
-          
-          <div class="job-details">
-            <div class="job-info">
-              <div class="job-desc">${job.description}</div>
-              <div class="job-meta">${formatDate(job.date)}</div>
-              ${job.notes ? `<div class="job-notes">📝 ${job.notes}</div>` : ''}
-            </div>
-            <div class="job-amount">
-              <div class="job-income">+${incomeDisplay}</div>
-              <div class="job-cost">-${costDisplay}</div>
-            </div>
-          </div>
-
-          <div class="job-actions">
-            <button class="btn btn-secondary btn-sm" onclick="editJob(${originalIndex})">✏️ Edit</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteJob(${originalIndex})">🗑️ Delete</button>
-          </div>
+  list.innerHTML = customers.map((cust, i) => {
+    const custJobs = repairJobs.filter(j => j.customerPhone === cust.phone);
+    const totalSpent = custJobs.reduce((sum, j) => sum + j.price, 0);
+    return `
+      <div class="item-card">
+        <div class="item-info">
+          <div class="item-name">${cust.name}</div>
+          <div style="font-size: 12px; color: #888;">📱 ${cust.phone}</div>
+          <div style="font-size: 12px; color: #10b981; margin-top: 4px;">Jobs: ${custJobs.length} • Total: ${formatCurrency(totalSpent, 'usd')}</div>
         </div>
-      `;
-    }).join('');
+      </div>
+    `;
+  }).join('');
+}
+
+document.getElementById('repairSearchBox').addEventListener('input', (e) => {
+  const query = e.target.value.toLowerCase();
+  const filtered = repairJobs.filter(j => 
+    j.customerName.toLowerCase().includes(query) ||
+    j.customerPhone.includes(query) ||
+    j.description.toLowerCase().includes(query)
+  );
+  const list = document.getElementById('repairHistoryList');
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state">No results</div>';
+    return;
   }
+  list.innerHTML = filtered.reverse().map(job => {
+    const profit = job.price - job.cost;
+    return `
+      <div class="item-card">
+        <div class="item-info">
+          <div class="item-name">${job.customerName}</div>
+          <div style="font-size: 12px; color: #888;">${job.date} • ${job.description}</div>
+          <div style="font-size: 13px; color: #10b981; margin-top: 4px;">${formatCurrency(job.price, 'usd')} (Profit: ${formatCurrency(profit, 'usd')})</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+});
+
+// ============ RETAIL MODE ============
+
+function renderProducts() {
+  const grid = document.getElementById('productGrid');
+  if (products.length === 0) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;">No products. Add from Inventory.</div>';
+    return;
+  }
+  grid.innerHTML = products.map((p, i) => `
+    <div style="background: #1a1a1a; border: 0.5px solid #333; border-radius: 8px; padding: 12px; text-align: center; cursor: pointer;" onclick="addToCart(${i})">
+      <div style="font-size: 12px; font-weight: 600; margin-bottom: 6px;">${p.name}</div>
+      <div style="font-size: 14px; color: #10b981; font-weight: 700; margin-bottom: 4px;">${formatCurrency(p.price, p.currency)}</div>
+      <div style="font-size: 11px; color: #888;">Stock: ${p.qty}</div>
+    </div>
+  `).join('');
+}
+
+function addToCart(productIndex) {
+  const product = products[productIndex];
+  if (product.qty <= 0) { alert('Out of stock'); return; }
+  
+  const existingItem = cart.find(item => item.productIndex === productIndex);
+  if (existingItem) {
+    existingItem.quantity++;
+  } else {
+    cart.push({
+      productIndex,
+      name: product.name,
+      price: product.price,
+      currency: product.currency,
+      quantity: 1
+    });
+  }
+  updateCart();
+}
+
+function updateCart() {
+  const list = document.getElementById('cartItemsList');
+  const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const subtotal = cart.reduce((sum, item) => sum + convertToUSD(item.price, item.currency) * item.quantity, 0);
+
+  document.getElementById('cartCount').textContent = count;
+  document.getElementById('cartSubtotal').textContent = formatCurrency(subtotal, 'usd');
+  document.getElementById('cartTotal').textContent = formatCurrency(subtotal, 'usd');
+
+  if (cart.length === 0) {
+    list.innerHTML = '<div class="empty-state">Empty cart</div>';
+    return;
+  }
+
+  list.innerHTML = cart.map((item, i) => `
+    <div class="cart-item">
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">${formatCurrency(item.price, item.currency)} × ${item.quantity}</div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="removeFromCart(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function removeFromCart(i) {
+  cart.splice(i, 1);
+  updateCart();
+}
+
+document.getElementById('clearCartBtn').addEventListener('click', () => {
+  cart = [];
+  updateCart();
+});
+
+document.getElementById('checkoutBtn').addEventListener('click', () => {
+  if (cart.length === 0) { alert('Cart empty'); return; }
+  const subtotal = cart.reduce((sum, item) => sum + convertToUSD(item.price, item.currency) * item.quantity, 0);
+  
+  const receipt = {
+    id: Date.now(),
+    items: cart.map(item => ({ ...item })),
+    total: subtotal,
+    payment: 'cash',
+    date: new Date().toISOString().split('T')[0],
+    timestamp: new Date().toISOString()
+  };
+
+  // Deduct from inventory
+  cart.forEach(item => {
+    products[item.productIndex].qty -= item.quantity;
+  });
+  localStorage.setItem('products', JSON.stringify(products));
+
+  retailTransactions.push(receipt);
+  localStorage.setItem('retailTransactions', JSON.stringify(retailTransactions));
+
+  showRetailReceipt(receipt);
+  cart = [];
+  updateCart();
+});
+
+function showRetailReceipt(receipt) {
+  const itemsHTML = receipt.items.map(item => `
+    <div class="receipt-line"><span>${item.name} × ${item.quantity}</span><span>${formatCurrency(item.price * item.quantity, item.currency)}</span></div>
+  `).join('');
+
+  const receiptHTML = `
+    <div class="receipt-view">
+      <div class="receipt-header">${businessConfig.businessName || 'SHOP'}<br>🛍️ RECEIPT</div>
+      ${businessConfig.businessAddress ? `<div style="font-size: 10px; margin-bottom: 6px;">${businessConfig.businessAddress}</div>` : ''}
+      <div class="receipt-separator"></div>
+      ${itemsHTML}
+      <div class="receipt-separator"></div>
+      <div class="receipt-line"><span>Total:</span><span>${formatCurrency(receipt.total, 'usd')}</span></div>
+      <div class="receipt-line" style="justify-content: center; margin: 12px 0;"><span class="receipt-amount">${formatCurrency(receipt.total, 'usd')}</span></div>
+      <div class="receipt-separator"></div>
+      <div style="font-size: 11px; margin: 12px 0;">Payment: 💵 Cash</div>
+      <div class="receipt-footer">${new Date().toLocaleTimeString()}</div>
+    </div>
+  `;
+  document.getElementById('receiptContent').innerHTML = receiptHTML;
+  document.getElementById('receiptModal').classList.add('open');
+}
+
+// INVENTORY
+function renderInventory() {
+  const list = document.getElementById('inventoryList');
+  if (products.length === 0) {
+    list.innerHTML = '<div class="empty-state">No products</div>';
+    return;
+  }
+  list.innerHTML = products.map((p, i) => `
+    <div class="item-card">
+      <div class="item-info">
+        <div class="item-name">${p.name} (${p.sku})</div>
+        <div style="font-size: 12px; color: #888;">${p.category || 'General'}</div>
+        <div style="font-size: 13px; color: #10b981; margin-top: 4px;">${formatCurrency(p.price, p.currency)} • Stock: ${p.qty}</div>
+      </div>
+      <div class="item-actions">
+        <button class="btn btn-secondary btn-sm" onclick="editProduct(${i})">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteProduct(${i})">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function editProduct(i) {
+  editingProductIndex = i;
+  const p = products[i];
+  document.getElementById('productModalTitle').textContent = '✏️ Edit Product';
+  document.getElementById('productName').value = p.name;
+  document.getElementById('productSKU').value = p.sku;
+  document.getElementById('productPrice').value = p.price;
+  document.getElementById('productCurrency').value = p.currency;
+  document.getElementById('productQty').value = p.qty;
+  document.getElementById('productCategory').value = p.category;
+  document.getElementById('productModal').classList.add('open');
+}
+
+function deleteProduct(i) {
+  if (confirm('Delete?')) {
+    products.splice(i, 1);
+    localStorage.setItem('products', JSON.stringify(products));
+    renderInventory();
+  }
+}
+
+function closeProductModal() {
+  document.getElementById('productModal').classList.remove('open');
+  editingProductIndex = -1;
+}
+
+document.getElementById('addProductBtn').addEventListener('click', () => {
+  editingProductIndex = -1;
+  document.getElementById('productModalTitle').textContent = '➕ Add Product';
+  document.getElementById('productName').value = '';
+  document.getElementById('productSKU').value = '';
+  document.getElementById('productPrice').value = '';
+  document.getElementById('productCurrency').value = 'usd';
+  document.getElementById('productQty').value = '1';
+  document.getElementById('productCategory').value = '';
+  document.getElementById('productModal').classList.add('open');
+});
+
+document.getElementById('saveProductBtn').addEventListener('click', () => {
+  const name = document.getElementById('productName').value;
+  const price = parseFloat(document.getElementById('productPrice').value);
+  if (!name || !price) { alert('Enter name & price'); return; }
+
+  const product = {
+    name,
+    sku: document.getElementById('productSKU').value,
+    price,
+    currency: document.getElementById('productCurrency').value,
+    qty: parseInt(document.getElementById('productQty').value),
+    category: document.getElementById('productCategory').value
+  };
+
+  if (editingProductIndex === -1) {
+    products.push(product);
+  } else {
+    products[editingProductIndex] = product;
+  }
+
+  localStorage.setItem('products', JSON.stringify(products));
+  closeProductModal();
+  renderInventory();
+  renderProducts();
+});
+
+function renderRetailHistory() {
+  const list = document.getElementById('retailHistoryList');
+  if (retailTransactions.length === 0) {
+    list.innerHTML = '<div class="empty-state">No sales</div>';
+    return;
+  }
+  list.innerHTML = retailTransactions.reverse().map(tx => {
+    const itemCount = tx.items.reduce((sum, i) => sum + i.quantity, 0);
+    return `
+      <div class="item-card">
+        <div class="item-info">
+          <div class="item-name">#${tx.id} • ${itemCount} items</div>
+          <div style="font-size: 12px; color: #888;">${tx.date}</div>
+          <div style="font-size: 13px; color: #10b981; margin-top: 4px;">${formatCurrency(tx.total, 'usd')}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+document.getElementById('retailSearchBox').addEventListener('input', (e) => {
+  const query = e.target.value.toLowerCase();
+  const filtered = retailTransactions.filter(tx => 
+    tx.id.toString().includes(query) ||
+    tx.items.some(i => i.name.toLowerCase().includes(query))
+  );
+  const list = document.getElementById('retailHistoryList');
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state">No results</div>';
+    return;
+  }
+  list.innerHTML = filtered.reverse().map(tx => {
+    const itemCount = tx.items.reduce((sum, i) => sum + i.quantity, 0);
+    return `
+      <div class="item-card">
+        <div class="item-info">
+          <div class="item-name">#${tx.id} • ${itemCount} items</div>
+          <div style="font-size: 12px; color: #888;">${tx.date}</div>
+          <div style="font-size: 13px; color: #10b981; margin-top: 4px;">${formatCurrency(tx.total, 'usd')}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
 });
 
 // SETTINGS
 document.getElementById('saveExchangeBtn').addEventListener('click', () => {
-  const newRate = parseInt(document.getElementById('exchangeRate').value);
-  if (newRate && newRate > 0) {
-    USD_TO_KHR = newRate;
-    localStorage.setItem('exchangeRate', USD_TO_KHR);
-    updateDashboard();
-    renderJobs();
-    syncToFirebase();
-    alert('✅ Exchange rate updated!');
-  } else {
-    alert('Please enter a valid exchange rate');
-  }
+  USD_TO_KHR = parseInt(document.getElementById('exchangeRate').value);
+  localStorage.setItem('exchangeRate', USD_TO_KHR);
+  alert('✅ Saved');
 });
 
-document.getElementById('clearAllBtn').addEventListener('click', () => {
-  if (confirm('⚠️ This will delete ALL jobs! Are you sure?')) {
-    if (confirm('🚨 Are you REALLY sure? This cannot be undone!')) {
-      jobs = [];
-      localStorage.setItem('repairJobs', JSON.stringify(jobs));
-      updateDashboard();
-      renderJobs();
-      syncToFirebase();
-      alert('✅ All jobs deleted');
-    }
-  }
+document.getElementById('saveBusinessBtn').addEventListener('click', () => {
+  businessConfig = {
+    businessName: document.getElementById('businessName').value,
+    businessAddress: document.getElementById('businessAddress').value,
+    businessPhone: document.getElementById('businessPhone').value,
+    ownerName: document.getElementById('ownerName').value
+  };
+  localStorage.setItem('businessConfig', JSON.stringify(businessConfig));
+  alert('✅ Saved');
 });
-
-// INPUT LISTENERS
-document.getElementById('income').addEventListener('input', updatePreview);
-document.getElementById('cost').addEventListener('input', updatePreview);
-document.getElementById('incomeCurrency').addEventListener('change', updatePreview);
-document.getElementById('costCurrency').addEventListener('change', updatePreview);
 
 // Initialize
-updateDashboard();
-renderJobs();
-updateSyncStatus('✅ Ready');
-console.log('Repair Profit v' + APP_VERSION + ' loaded');
+updateNavigation();
+populateCustomerDropdown();
+renderProducts();
+console.log('Repair POS v' + APP_VERSION);
 </script>
 </body>
 </html>
